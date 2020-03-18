@@ -30,7 +30,10 @@
     },
     "android": {
       "package": "com.uneti.demo",
-      "versionCode": 1
+      "versionCode": 1,
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyAIL1eUqYUluckXOgWw7iA6MqNb-W1YKMk" }
+      }
     }
   }
 }

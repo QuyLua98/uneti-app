@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View, Text } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, Text, Image } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import LeftDrawerNavigator from './navigation/LeftDrawerNavigator';
 import useLinking from './navigation/useLinking';
-import LoginScreen from './screens/LoginScreen';
 import TabBarIcon from './components/TabBarIcon';
 
 
@@ -32,8 +31,10 @@ export default function App(props) {
 
         // Load fonts
         await Font.loadAsync({
-          ...Ionicons.font,
           'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+          'Roboto': require('native-base/Fonts/Roboto.ttf'),
+          'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+          ...Ionicons.font,
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
@@ -53,21 +54,8 @@ export default function App(props) {
     return (
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        {/* <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator>
-            <Stack.Screen name="Root" component={BottomTabNavigator} />
-          </Stack.Navigator>
-        </NavigationContainer> */}
         <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator>
-            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown : false }} />
-            <Stack.Screen name="Root" component={LeftDrawerNavigator} 
-              options={{ 
-                title : "Trang chủ",
-                headerLeft: ({}) => <HeaderLeft />
-              }} 
-            />
-          </Stack.Navigator>
+          <LeftDrawerNavigator />
         </NavigationContainer>
       </View>
     );
@@ -81,7 +69,7 @@ const HeaderLeft = () => {
       <TouchableOpacity
         style={styles.menuButton}
         onPress={() => {
-          navigation.dispatch(DrawerActions.openDrawer());
+          navigation.dispatch(DrawerActions.toggleDrawer());
         }}>
           <TabBarIcon name='md-menu'  />
       </TouchableOpacity>

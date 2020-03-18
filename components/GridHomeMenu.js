@@ -1,12 +1,11 @@
 import * as React from "react";
 import {
   Image,
-  Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View
 } from "react-native";
+import { Thumbnail } from 'native-base'
 
 export default class GridHomeMenu extends React.Component {
   constructor(props) {
@@ -18,7 +17,7 @@ export default class GridHomeMenu extends React.Component {
     return (
       <View style={styles.shadow}>
         <View style={styles.itemContainer}>
-          <Image style={styles.img} source={grid.image} />
+          <Thumbnail square style={styles.image} source={grid.image} />
           <Text style={styles.title}>{grid.title}</Text>
         </View>
       </View>
@@ -32,8 +31,11 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: "#fff",
     overflow: "hidden",
-    
-
+    alignItems: "center"
+  },
+  image: {
+    marginTop: 10,
+    tintColor: "#757575"
   },
   shadow: {
     shadowColor: "#000",
@@ -41,14 +43,10 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 0 }
   },
-  img: {
-    height: 150,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4
-  },
   title: {
     fontSize: 14,
     marginBottom: 8,
+    marginTop: 5,
     fontWeight: "bold",
     textAlign: "center",
   }

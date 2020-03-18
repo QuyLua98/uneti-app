@@ -6,7 +6,8 @@ import {
   Text,
   Button,
   TouchableOpacity,
-  View
+  View,
+  SafeAreaView
 } from "react-native";
 import { ScrollView, FlatList } from "react-native-gesture-handler";
 import ScheduleItem from "../components/ScheduleItem";
@@ -89,7 +90,7 @@ export default class ScheduleScreen extends React.Component {
   render() {
     const { schedule } = this.state;
     return (
-      <ScrollView >
+      <ScrollView style={{flex: 1}}>
         <FlatList 
           data={schedule}
           contentContainerStyle={styles.container}
@@ -98,7 +99,6 @@ export default class ScheduleScreen extends React.Component {
            }
           keyExtractor={item => item.id}>
         </FlatList>
-        
       </ScrollView>
     );
   }

@@ -10,7 +10,12 @@ import {
   Picker,
   Icon,
   Text,
-  View
+  View,
+  Header,
+  Left,
+  Button,
+  Body,
+  Title
 } from "native-base";
 
 export default class MarkTableScreen extends Component {
@@ -24,6 +29,10 @@ export default class MarkTableScreen extends Component {
 
   onChange(value) {
     this.setState({ currentMark: this.state.mark[value] });
+  }
+
+  onPressBack = () => {
+    this.props.navigation.goBack();
   }
 
   componentDidMount() {
@@ -53,6 +62,16 @@ export default class MarkTableScreen extends Component {
   render() {
     return (
       <Container>
+        <Header>
+          <Left>
+            <Button transparent onPress={this.onPressBack}>
+              <Icon name='arrow-back' />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Kết quả học tập</Title>
+          </Body>
+        </Header>
         <Content>
           <Form>
             <Item picker>

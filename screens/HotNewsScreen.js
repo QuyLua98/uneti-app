@@ -1,18 +1,9 @@
 import * as React from "react";
 import {
   Container,
-  Header,
   Content,
   List,
-  ListItem,
-  Thumbnail,
-  Text,
-  Left,
-  Body,
-  Right,
-  Button
 } from "native-base";
-import Modal from "../components/Modal";
 import NewsItem from "../components/NewsItem";
 
 export default class HotNewsScreen extends React.Component {
@@ -21,16 +12,6 @@ export default class HotNewsScreen extends React.Component {
     this.state = {
     };
   }
-
-  onClickMenu = link => {
-    this.props.navigation.navigate(link);
-  };
-
-  toggleModal = () => {
-    this.setState({
-      modalArticleData: {}
-    });
-  };
 
   handleModalClose = () => {
     this.setState({
@@ -44,11 +25,14 @@ export default class HotNewsScreen extends React.Component {
   };
 
   render() {
+    const { listArticleData } = this.props;
     return (
       <Container>
         <Content>
           <List>
-            <NewsItem onPress={this.handleItemDataOnPress} />
+            {listArticleData.map(item => {
+              return <NewsItem articleData={item} onPress={this.handleItemDataOnPress} />
+            })}
           </List>
         </Content>
       </Container>

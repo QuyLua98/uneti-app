@@ -5,27 +5,23 @@ class NewsItem extends Component {
 
     constructor(props) {
         super(props);
-        // this.data = props.data;
-        this.data = {
-            url: "https://khoacntt.uneti.edu.vn/chi-bo-khoa-cntt-to-chuc-dai-hoi-nhiem-ky-2020-2022--109",
-            title: "asd"
-        }
     }
 
     readNews = () => {
-      const {url, title} = this.data;
-      this.props.onPress({url, title});
+      const {link, title} = this.props.articleData;
+      this.props.onPress({link, title});
     }
 
     render() {
+      const { articleData } = this.props;
         return(
             <ListItem thumbnail button onPress={this.readNews} >
               <Left>
-                <Thumbnail square source={require('../assets/images/icon.png')} />
+                <Thumbnail square source={articleData.image != null ? articleData.image : require('../assets/images/icon.png')} />
               </Left>
               <Body>
-                <Text numberOfLines={2}>Chi bộ Khoa CNTT tổ chức Đại hội nhiệm kỳ 2020-2022</Text>
-                <Text note>20-12-2020</Text>
+                <Text numberOfLines={2}>{articleData.title}</Text>
+                <Text note>{articleData.date}</Text>
               </Body>
             </ListItem>
         );

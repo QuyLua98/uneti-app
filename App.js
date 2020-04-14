@@ -1,20 +1,18 @@
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View, Text, Image } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import { NavigationContainer, useNavigation, DrawerActions } from '@react-navigation/native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import LeftDrawerNavigator from './navigation/LeftDrawerNavigator';
 import useLinking from './navigation/useLinking';
-import TabBarIcon from './components/TabBarIcon';
-
 
 const Stack = createStackNavigator();
 
 export default function App(props) {
+  console.disableYellowBox = true
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
   const [initialNavigationState, setInitialNavigationState] = React.useState();
   const containerRef = React.useRef();
@@ -52,35 +50,31 @@ export default function App(props) {
     return null;
   } else {
     return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <LeftDrawerNavigator />
-        </NavigationContainer>
+      <View style={styles.app}>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
+            <LeftDrawerNavigator />
+          </NavigationContainer>
+        </View>
       </View>
     );
   }
 }
 
-const HeaderLeft = () => {
-  const navigation = useNavigation();
-  return (
-    <View style={{flexDirection: 'row'}}>
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={() => {
-          navigation.dispatch(DrawerActions.toggleDrawer());
-        }}>
-          <TabBarIcon name='md-menu'  />
-      </TouchableOpacity>
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
+  app: {
+    flex: 1,
+    backgroundColor: '#84b5ff',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    ...Platform.select({
+      android: {
+          marginTop: StatusBar.currentHeight
+      }
+  })
+
   },
   menuButton: {
     marginLeft: 10,

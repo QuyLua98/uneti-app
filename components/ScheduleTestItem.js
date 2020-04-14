@@ -5,30 +5,31 @@ import {
   View
 } from "react-native";
 
-export default class ScheduleItem extends React.Component {
+export default class ScheduleTestItem extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { schedule, date } = this.props;
+    const { schedule } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.cardHeader}>
           <Text style={styles.titleHeader}>
-            {date}
+            {schedule.ngayThi}
           </Text>
         </View>
         <View style={styles.cardBody}>
           <Text style={styles.titleBody}>
-            Tiết {schedule.tietHoc}
+            Tiết {schedule.tiet}
           </Text>
           <View style={styles.body}>
             <Text style={styles.content}>
-              {schedule.maLHP} - {schedule.giangVien}:{"\n"}
-              {schedule.tenMonHoc}
+              {schedule.maLHP}:{"\n"}
+              {schedule.tenMonThi} ({schedule.hinhThuc})
             </Text>
-            <Text style={styles.address}>Địa điểm: {schedule.phongHoc}</Text>
+            <Text style={styles.address}>Địa điểm: {schedule.phongThi} - {schedule.ghiChu}</Text>
+            <Text style={styles.address}>Loại thi: {schedule.loaiThi} - nhóm : {schedule.nhom}</Text>
           </View>
         </View>
       </View>

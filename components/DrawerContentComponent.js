@@ -32,16 +32,16 @@ const DrawerContentComponent = ({ navigation }) => {
               <Text style={styles.item}>Trang chủ</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.itemRow}>
+          {/* <View style={styles.itemRow}>
             <TabBarIcon name="md-paper" />
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("Schedule");
+                navigation.navigate("ScheduleTest");
               }}
             >
               <Text style={styles.item}>Tin tuyển sinh</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={styles.itemRow}>
             <TabBarIcon name="md-search" />
             <TouchableOpacity

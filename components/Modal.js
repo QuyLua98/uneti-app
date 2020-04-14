@@ -4,13 +4,12 @@ import { Dimensions, View, Share } from "react-native";
 import {
   Container,
   Header,
-  Content,
   Body,
   Left,
   Icon,
   Right,
   Title,
-  Button
+  Button,
 } from "native-base";
 import WebViewCustom from "./WebViewCustom";
 import { WebView } from "react-native-webview";
@@ -20,34 +19,43 @@ class ModalComponent extends Component {
     super(props);
   }
 
-  handleClose = () => {
-    return this.props.onClose();
+  onPressClose = () => {
+    return this.props.navigation.goBack();
   };
 
   handleShare = () => {
-    const { url, title } = this.props.articleData;
-    let message = `${title}\n\nRead More @${url}\n\nShared via RN News App`;
+    const { link, title } = this.props.articleData;
+    let message = `${title}\n\nRead More @${link}\n\nShared via Uneti App`;
     return Share.share(
-      { title, message, url: message },
+      { title, message, link: message },
       { dialogTitle: `Share ${title}` }
     );
   };
 
   render() {
     const { articleData } = this.props.route.params;
-    const { url } = articleData;
-    if (url != undefined) {
+    const { link } = articleData;
+    if (link != undefined) {
       return (
-        <Container
-          style={{ margin: 2, marginBottom: 0, backgroundColor: "#fff" }}
-        >
+        <Container>
+          <Header>
+            <Left>
+              <Button transparent onPress={this.onPressClose}>
+                <Icon name="arrow-back" />
+              </Button>
+            </Left>
+            <Body>
+              <Title>{articleData.title}</Title>
+            </Body>
+            <Right></Right>
+          </Header>
           <WebView
-              source={{ uri: url }}
-              style={{ flex: 1 }}
-              onError={this.handleClose}
-              startInLoadingState
-              scalesPageToFit
-            />
+            source={{ uri: link }}
+            style={{ flex: 1 }}
+            onError={this.onPressClose}
+            startInLoadingState
+            scalesPageToFit
+          />
         </Container>
       );
     } else {

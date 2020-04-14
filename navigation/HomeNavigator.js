@@ -37,7 +37,7 @@ export default class HomeScreen extends React.Component {
           component={this.TabNews}
           options={{ headerShown: false }}
         />
-        <HomeStack.Screen name="MyModal" component={Modal} options={{ headerTitle: "Xem chi tiết" }} />
+        <HomeStack.Screen name="MyModal" component={Modal} options={{ headerShown: false }} />
       </HomeStack.Navigator>
     );
   }

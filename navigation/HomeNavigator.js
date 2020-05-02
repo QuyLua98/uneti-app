@@ -1,14 +1,6 @@
 import * as React from "react";
-import {
-  Container,
-  Header,
-  Tab,
-  Tabs,
-  TabHeading,
-  Text,
-  Button
-} from "native-base";
 import NewsScreen from "../screens/NewsScreen";
+import SearchNewsScreen from "../screens/SearchNewsScreen";
 import Modal from "../components/Modal";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -25,6 +17,7 @@ export default class HomeScreen extends React.Component {
     return (
       <NewsStack.Navigator>
         <NewsStack.Screen name="News" component={NewsScreen} options={{ headerShown: false }} />
+        <NewsStack.Screen name="SearchNews" component={SearchNewsScreen} options={{ headerShown: false }} />
       </NewsStack.Navigator>
     );
   };

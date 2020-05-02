@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Button,
-  TouchableOpacity
-} from "react-native";
-import { DrawerActions } from "@react-navigation/native";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { DrawerItem, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import TabBarIcon from "./TabBarIcon";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -32,16 +25,26 @@ const DrawerContentComponent = ({ navigation }) => {
               <Text style={styles.item}>Trang chủ</Text>
             </TouchableOpacity>
           </View>
-          {/* <View style={styles.itemRow}>
+          <View style={styles.itemRow}>
             <TabBarIcon name="md-paper" />
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("ScheduleTest");
+                navigation.navigate("About");
               }}
             >
-              <Text style={styles.item}>Tin tuyển sinh</Text>
+              <Text style={styles.item}>Giới thiệu</Text>
             </TouchableOpacity>
-          </View> */}
+          </View>
+          <View style={styles.itemRow}>
+            <TabBarIcon name="md-school" />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Educate");
+              }}
+            >
+              <Text style={styles.item}>Đào tạo</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.itemRow}>
             <TabBarIcon name="md-search" />
             <TouchableOpacity
@@ -80,23 +83,23 @@ const DrawerContentComponent = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center"
+    alignItems: "center",
   },
   image: {
     marginTop: 10,
-    backgroundColor: "#C3BFC3"
+    backgroundColor: "#C3BFC3",
   },
   wrapper: {
-    marginTop: 20
+    marginTop: 20,
   },
   item: {
     fontSize: 20,
-    marginLeft: 20
+    marginLeft: 20,
   },
   itemRow: {
     flexDirection: "row",
-    padding: 15
-  }
+    padding: 15,
+  },
 });
 
 export default DrawerContentComponent;

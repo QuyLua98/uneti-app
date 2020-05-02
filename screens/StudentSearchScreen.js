@@ -16,6 +16,10 @@ import {
   Button,
   Text,
   CheckBox,
+  Container,
+  Header,
+  Left,
+  Title,
 } from "native-base";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SESSION_ASP, CODE_SEARCH } from "../constants/Constants";
@@ -39,18 +43,14 @@ export default class StudentSearchScreen extends Component {
       //debug
       // var instance = axios.create({ withCredentials: false });
 
+      console.log(sessionAsp);
       if (sessionAsp === null) {
         this.setState({ isLoading: true });
         await axios
-          .get(`http://daotao.uneti.edu.vn/TraCuuThongTin.aspx`)
+          .get(Config.API_URL + `/api/session`)
           .then(async (res) => {
-            console.log(res.headers["set-cookie"]);
-            sessionAsp = res.headers["set-cookie"][0];
-            sessionAsp = sessionAsp.split(";");
-            sessionAsp = sessionAsp[0].split("=")[1];
-            console.log(sessionAsp);
-
-            await AsyncStorage.setItem(SESSION_ASP, sessionAsp);
+            console.log(res);
+            await AsyncStorage.setItem(SESSION_ASP, res.data);
             this.setState({
               connected: true,
               isLoading: false,
@@ -78,6 +78,10 @@ export default class StudentSearchScreen extends Component {
     }
   }
 
+  onClickMenu = () => {
+    this.props.navigation.toggleDrawer();
+  };
+
   clearText = () => {
     this.setState({ searchText: "" });
   };
@@ -90,14 +94,17 @@ export default class StudentSearchScreen extends Component {
     if (this.state.searchText === "") {
       alert("Mã sinh viên không được bỏ trống.");
     } else {
-      if(this.state.isRemember){
+      if (this.state.isRemember) {
         this._storeCode(this.state.searchText);
-      }else{
+      } else {
         this._removeCodeStore();
       }
       this.props.navigation.navigate("StudentDetail", {
         screen: "StudentHome",
-        params: { code: this.state.searchText, sessionAsp: this.state.sessionAsp },
+        params: {
+          code: this.state.searchText,
+          sessionAsp: this.state.sessionAsp,
+        },
       });
     }
   };
@@ -105,17 +112,14 @@ export default class StudentSearchScreen extends Component {
   _storeCode = async (code) => {
     try {
       await AsyncStorage.setItem(CODE_SEARCH, code);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   _removeCodeStore = async () => {
     try {
-        await AsyncStorage.removeItem(CODE_SEARCH);
-    }
-    catch(err) {
-    }
-}
+      await AsyncStorage.removeItem(CODE_SEARCH);
+    } catch (err) {}
+  };
 
   load() {
     if (this.state.isLoading) {
@@ -130,52 +134,64 @@ export default class StudentSearchScreen extends Component {
       );
     } else {
       return (
-        <View searchBar style={styles.container}>
-          <Item style={styles.searchBarStyle}>
-            <Icon name="ios-search" />
-            {this.state.connected ? (
-              <Input
-                placeholder="Nhập mã sinh viên cần tra cứu..."
-                value={this.state.searchText}
-                onChangeText={(searchText) => this.setState({ searchText })}
-              />
-            ) : (
-              <Input
-                disabled
-                placeholder="Nhập mã sinh viên cần tra cứu..."
-                value={this.state.searchText}
-                onChangeText={(searchText) => this.setState({ searchText })}
-              />
-            )}
-            <Icon
-              onPress={this.clearText}
-              name="close"
-              style={{ color: "#ff8e8e" }}
-            />
-          </Item>
-          <View style={{ padding: 10, marginTop: 10 }}>
-            {this.state.connected ? (
-              <Button style={styles.btnSearch} onPress={() => this.onSubmit(this.state.searchText)}>
-                <Text style={{ color: "#fff" }}>Tra Cứu</Text>
+        <Container>
+          <Header>
+            <Left>
+              <Button transparent onPress={this.onClickMenu}>
+                <Icon name="menu" />
               </Button>
-            ) : (
-              <Button
-                disabled
-                style={styles.btnSearchDisable}
-              >
-                <Text style={{ color: "#fff" }}>Tra Cứu</Text>
-              </Button>
-            )}
+            </Left>
+            <Body>
+              <Title>Tra cứu thông tin</Title>
+            </Body>
+          </Header>
+          <View searchBar style={styles.container}>
+            <Item style={styles.searchBarStyle}>
+              <Icon name="ios-search" />
+              {this.state.connected ? (
+                <Input
+                  placeholder="Nhập mã sinh viên cần tra cứu..."
+                  value={this.state.searchText}
+                  onChangeText={(searchText) => this.setState({ searchText })}
+                />
+              ) : (
+                <Input
+                  disabled
+                  placeholder="Nhập mã sinh viên cần tra cứu..."
+                  value={this.state.searchText}
+                  onChangeText={(searchText) => this.setState({ searchText })}
+                />
+              )}
+              <Icon
+                onPress={this.clearText}
+                name="close"
+                style={{ color: "#ff8e8e" }}
+              />
+            </Item>
+            <View style={{ padding: 10, marginTop: 10 }}>
+              {this.state.connected ? (
+                <Button
+                  style={styles.btnSearch}
+                  onPress={() => this.onSubmit(this.state.searchText)}
+                >
+                  <Text style={{ color: "#fff" }}>Tra Cứu</Text>
+                </Button>
+              ) : (
+                <Button disabled style={styles.btnSearchDisable}>
+                  <Text style={{ color: "#fff" }}>Tra Cứu</Text>
+                </Button>
+              )}
+            </View>
+            <TouchableOpacity onPress={this.toggleCheck} activeOpacity={0.7}>
+              <ListItem>
+                <CheckBox checked={this.state.isRemember} />
+                <Body>
+                  <Text>Ghi nhớ thông tin</Text>
+                </Body>
+              </ListItem>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={this.toggleCheck} activeOpacity={0.7}>
-            <ListItem>
-              <CheckBox checked={this.state.isRemember} />
-              <Body>
-                <Text>Ghi nhớ thông tin</Text>
-              </Body>
-            </ListItem>
-          </TouchableOpacity>
-        </View>
+        </Container>
       );
     }
   }

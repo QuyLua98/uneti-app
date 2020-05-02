@@ -17,7 +17,7 @@ class NewsItem extends Component {
         return(
             <ListItem thumbnail button onPress={this.readNews} >
               <Left>
-                <Thumbnail square source={articleData.image != null ? articleData.image : require('../assets/images/icon.png')} />
+                <Thumbnail square source={articleData.image != null ? {uri: articleData.image} : require('../assets/images/icon.png')} />
               </Left>
               <Body>
                 <Text numberOfLines={2}>{articleData.title}</Text>

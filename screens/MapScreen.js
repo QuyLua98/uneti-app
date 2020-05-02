@@ -1,24 +1,34 @@
 import React, { Component } from "react";
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
-import { Container, Header, Left, Icon, View } from "native-base";
-import { DrawerActions } from "@react-navigation/native";
+import {
+  Container,
+  Header,
+  Left,
+  View,
+  Right,
+  Body,
+  Title,
+  Button,
+  Icon,
+} from "native-base";
 import MapView, { Marker } from "react-native-maps";
+import { DrawerActions } from "@react-navigation/native";
 
 export default class MapScreen extends Component {
   render() {
     const { navigation } = this.props;
     return (
       <Container>
-        <View style={{backgroundColor: "#fff", height: 18 }}></View>
-        <Header style={{backgroundColor: "#fff", height: 40,  flexDirection: "row"}}>
-            <TouchableOpacity
-              style={{flex: 1,marginLeft: 10, marginTop: 10}}
-              onPress={() => {
-                navigation.dispatch(DrawerActions.toggleDrawer());
-              }}
-            >
+        <Header>
+          <Left>
+            <Button transparent onPress={() => {navigation.dispatch(DrawerActions.toggleDrawer())}}>
               <Icon name="menu" />
-            </TouchableOpacity>
+            </Button>
+          </Left>
+          <Body>
+            <Title>Bản đồ</Title>
+          </Body>
+          <Right></Right>
         </Header>
         <View style={styles.container}>
           <MapView
@@ -27,13 +37,13 @@ export default class MapScreen extends Component {
               latitude: 20.99574,
               longitude: 105.865596,
               latitudeDelta: 0.015,
-              longitudeDelta: 0.0121
+              longitudeDelta: 0.0121,
             }}
           >
             <Marker
               coordinate={{
                 latitude: 20.99574,
-                longitude: 105.865596
+                longitude: 105.865596,
               }}
               title="Cơ sở 1"
             />
@@ -47,6 +57,6 @@ export default class MapScreen extends Component {
 const styles = StyleSheet.create({
   mapStyle: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-  }
+    height: Dimensions.get("window").height,
+  },
 });

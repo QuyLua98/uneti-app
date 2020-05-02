@@ -3,23 +3,34 @@ import { Image, StyleSheet } from "react-native";
 import {
   Container,
   Header,
-  Content,
-  Card,
-  CardItem,
-  Thumbnail,
+  Title,
   Text,
   Button,
   Icon,
   Left,
   Body,
-  Right,
   View
 } from "native-base";
 
 export default class ContactScreen extends Component {
+
+  onClickMenu = () => {
+    this.props.navigation.toggleDrawer();
+  };
+
   render() {
     return (
       <Container>
+        <Header>
+          <Left>
+            <Button transparent onPress={this.onClickMenu}>
+              <Icon name="menu" />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Liên hệ</Title>
+          </Body>
+        </Header>
         <View>
           <Image
             source={require("../assets/images/splash.png")}

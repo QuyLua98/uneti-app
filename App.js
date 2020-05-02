@@ -69,11 +69,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    ...Platform.select({
-      android: {
-          marginTop: StatusBar.currentHeight
-      }
-  })
+  //   ...Platform.select({
+  //     android: {
+  //         marginTop: StatusBar.currentHeight
+  //     }
+  // })
 
   },
   menuButton: {

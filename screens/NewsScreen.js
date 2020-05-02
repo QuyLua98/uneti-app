@@ -1,21 +1,21 @@
 import * as React from "react";
-import { StyleSheet, ActivityIndicator } from "react-native";
+import { StyleSheet, ActivityIndicator, Platform } from "react-native";
 import { Config } from "../config";
 import {
   Container,
-  Header,
   Tab,
   Tabs,
-  TabHeading,
   Text,
   Button,
-  Left,
   Icon,
-  Right,
   ScrollableTab,
   View,
+  Content,
+  ListItem,
+  Input,
+  InputGroup,
 } from "native-base";
-import HotNewsScreen from "./HotNewsScreen";
+import NewsItemScreen from "./NewsItemScreen";
 import axios from "axios";
 
 export default class NewsScreen extends React.Component {
@@ -23,21 +23,29 @@ export default class NewsScreen extends React.Component {
     super(props);
     this.state = {
       isHotNewsLoading: false,
-      isMainNewsLoading: false,
+      isEventNewsLoading: false,
       hotNews: [],
-      mainNews: [],
+      eventNews: [],
+      category: [
+        "news",
+        "Tin tức - sự kiện",
+        "Sinh viên",
+        "Nghiên cứu",
+        "Hoạt động",
+      ],
+      searchText: ""
     };
   }
 
   componentDidMount() {
     this.loadHotNews();
-    this.loadMainNews();
+    this.loadEventNews();
   }
 
   loadHotNews = () => {
     this.setState({ isHotNewsLoading: true });
     axios
-      .get(Config.API_URL + `/api/news/`)
+      .get(Config.API_URL + `/api/khoacntt/`)
       .then((res) => {
         this.setState({ hotNews: res.data });
         this.setState({ isHotNewsLoading: false });
@@ -48,17 +56,17 @@ export default class NewsScreen extends React.Component {
       });
   };
 
-  loadMainNews = () => {
-    this.setState({ isMainNewsLoading: true });
+  loadEventNews = () => {
+    this.setState({ isEventNewsLoading: true });
     axios
-      .get(Config.API_URL + `/api/news/main/`)
+      .get(Config.API_URL + `/api/khoacntt/event/`)
       .then((res) => {
-        this.setState({ mainNews: res.data });
-        this.setState({ isMainNewsLoading: false });
+        this.setState({ eventNews: res.data });
+        this.setState({ isEventNewsLoading: false });
       })
       .catch((err) => {
         alert("Không thể kết nối đến máy chủ.");
-        this.setState({ isMainNewsLoading: false });
+        this.setState({ isEventNewsLoading: false });
       });
   };
 
@@ -74,112 +82,127 @@ export default class NewsScreen extends React.Component {
     );
   }
 
+  _searchSubmit = (event) => {
+    const textSearch = event.nativeEvent.text;
+    if (textSearch == "") {
+      alert("Mời nhập từ khoá cần tìm kiếm");
+    } else {
+      this.props.navigation.navigate("SearchNews", {
+        textSearch: textSearch,
+      });
+    }
+  };
+
   render() {
     const {
       hotNews,
-      mainNews,
+      eventNews,
       isHotNewsLoading,
-      isMainNewsLoading,
+      isEventNewsLoading,
+      category,
+      searchText
     } = this.state;
     return (
       <Container>
-        <Header hasTabs style={styles.header}>
-          <Left>
-            <Button transparent onPress={this.onClickMenu}>
-              <Icon name="menu" />
-            </Button>
-          </Left>
-          <Right></Right>
-        </Header>
-        <Tabs renderTabBar={() => <ScrollableTab />}>
-          <Tab
-            heading={
-              <TabHeading>
-                <Text>Tin nổi bật</Text>
-              </TabHeading>
-            }
+        <View
+          searchBar
+          style={{
+            flexDirection: "row",
+            padding: 10,
+            ...Platform.select({
+              android: {
+                backgroundColor: "#5262af",
+              },
+              ios: {
+                backgroundColor: "#3f9afc",
+              },
+            }),
+          }}
+        >
+          <Button
+            transparent
+            iconLeft
+            style={{ height: 30, marginRight: 15 }}
+            onPress={this.onClickMenu}
           >
-            {/* tab content */}
+            <Icon name="menu" style={{ color: "#fff" }} />
+          </Button>
+
+          <InputGroup
+            rounded
+            style={{
+              flex: 1,
+              backgroundColor: "#fff",
+              height: 30,
+              paddingLeft: 10,
+              paddingRight: 10,
+            }}
+          >
+            <Input
+              style={{ height: 20 }}
+              placeholder="Tìm kiếm"
+              value={searchText}
+              onSubmitEditing={(event) => this._searchSubmit(event)}
+            />
+            <Icon name="ios-search" />
+          </InputGroup>
+        </View>
+        <Tabs renderTabBar={() => <ScrollableTab />}>
+          <Tab heading={"Tin nổi bật"}>
             {isHotNewsLoading ? (
               this._loadingBlock(isHotNewsLoading)
             ) : (
-              <HotNewsScreen
-                listArticleData={hotNews}
-                onPress={this.readNews}
-                navigation={this.props.navigation}
-              />
+              <Container>
+                <Content>
+                  <NewsItemScreen
+                    listArticleData={hotNews[category[0]]}
+                    navigation={this.props.navigation}
+                  />
+                  <ListItem itemDivider>
+                    <Text>{category[1]}</Text>
+                  </ListItem>
+                  <NewsItemScreen
+                    listArticleData={hotNews[category[1]]}
+                    navigation={this.props.navigation}
+                  />
+                  <ListItem itemDivider>
+                    <Text>{category[2]}</Text>
+                  </ListItem>
+                  <NewsItemScreen
+                    listArticleData={hotNews[category[2]]}
+                    navigation={this.props.navigation}
+                  />
+                  <ListItem itemDivider>
+                    <Text>{category[3]}</Text>
+                  </ListItem>
+                  <NewsItemScreen
+                    listArticleData={hotNews[category[3]]}
+                    navigation={this.props.navigation}
+                  />
+                  <ListItem itemDivider>
+                    <Text>{category[4]}</Text>
+                  </ListItem>
+
+                  <NewsItemScreen
+                    listArticleData={hotNews[category[4]]}
+                    navigation={this.props.navigation}
+                  />
+                </Content>
+              </Container>
             )}
           </Tab>
-          <Tab
-            heading={
-              <TabHeading>
-                <Text>Tin tức - sự kiện</Text>
-              </TabHeading>
-            }
-          >
-            {/* tab content */}
-            {isMainNewsLoading ? (
-              this._loadingBlock(isMainNewsLoading)
+          <Tab heading={"Tin tức - sự kiện"}>
+            {isEventNewsLoading ? (
+              this._loadingBlock(isEventNewsLoading)
             ) : (
-              <HotNewsScreen
-                listArticleData={mainNews["Tin tức - sự kiện"]}
-                onPress={this.readNews}
-                navigation={this.props.navigation}
-              />
-            )}
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading>
-                <Text>Nghiên cứu</Text>
-              </TabHeading>
-            }
-          >
-            {/* tab content */}
-            {isMainNewsLoading ? (
-              this._loadingBlock(isMainNewsLoading)
-            ) : (
-              <HotNewsScreen
-                listArticleData={mainNews["Nghiên cứu"]}
-                onPress={this.readNews}
-                navigation={this.props.navigation}
-              />
-            )}
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading>
-                <Text>Hoạt động</Text>
-              </TabHeading>
-            }
-          >
-            {/* tab content */}
-            {isMainNewsLoading ? (
-              this._loadingBlock(isMainNewsLoading)
-            ) : (
-              <HotNewsScreen
-                listArticleData={mainNews["Hoạt động"]}
-                onPress={this.readNews}
-                navigation={this.props.navigation}
-              />
-            )}
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading>
-                <Text>Sinh viên</Text>
-              </TabHeading>
-            }
-          >
-            {/* tab content */}
-            {isMainNewsLoading ? (
-              this._loadingBlock(isMainNewsLoading)
-            ) : (
-              <HotNewsScreen
-                listArticleData={mainNews["Sinh viên"]}
-                onPress={this.readNews}
-                navigation={this.props.navigation}
-              />
+              <Container>
+                <Content>
+                  <NewsItemScreen
+                    listArticleData={eventNews}
+                    navigation={this.props.navigation}
+                  />
+                </Content>
+              </Container>
             )}
           </Tab>
         </Tabs>

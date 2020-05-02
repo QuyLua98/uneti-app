@@ -11,7 +11,6 @@ import {
   Title,
   Button,
 } from "native-base";
-import WebViewCustom from "./WebViewCustom";
 import { WebView } from "react-native-webview";
 
 class ModalComponent extends Component {

@@ -23,12 +23,14 @@ export default class MarkTableScreen extends Component {
     super(props);
     this.state = {
       mark: [],
-      currentMark: []
+      currentMark: [],
+      selected: "",
     };
   }
 
   onChange(value) {
     this.setState({ currentMark: this.state.mark[value] });
+    this.setState({ selected: value });
   }
 
   onPressBack = () => {
@@ -82,6 +84,7 @@ export default class MarkTableScreen extends Component {
                 placeholder="Chọn kì học"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
+                selectedValue={this.state.selected}
                 onValueChange={this.onChange.bind(this)}
               >
                 {this.state.mark.map((item, index) => (

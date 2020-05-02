@@ -133,14 +133,13 @@ export default class ScheduleTestScreen extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>Lịch học</Title>
+            <Title>Lịch thi</Title>
           </Body>
         </Header>
         <Content contentContainerStyle={{ flex: 1 }}>
           <Form>
             <Picker
               mode="dropdown"
-              iosHeader="Select your SIM"
               iosIcon={<Icon name="arrow-down" />}
               style={{ width: undefined }}
               selectedValue={this.state.selected}

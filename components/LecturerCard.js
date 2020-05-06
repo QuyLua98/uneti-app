@@ -24,18 +24,19 @@ export default class LecturerCard extends React.Component {
   };
 
   render() {
+    const { lecturer } = this.props;
     return (
       <Card>
         <CardItem>
           <Left>
             <Thumbnail
               large
-              source={require("../assets/images/about/avatar.jpg")}
+              source={{uri: lecturer.image}}
               style={{ borderColor: "#999999", borderWidth: 1 }}
             />
             <Body>
-              <Text style={{ fontSize: 20 }}>Nguyễn Hoàng Chiến</Text>
-              <Text note>Th.S</Text>
+              <Text style={{ fontSize: 20 }}>{lecturer.hoten}</Text>
+              <Text note>{lecturer.hocVi}</Text>
             </Body>
           </Left>
         </CardItem>
@@ -78,29 +79,28 @@ export default class LecturerCard extends React.Component {
                   }}
                 >
                   <Text style={{ marginTop: 2 }}>
-                    <Text style={{ fontWeight: "bold" }}>Năm sinh: </Text> 1
+                    <Text style={{ fontWeight: "bold" }}>Năm sinh: </Text> {lecturer.namSinh}
                   </Text>
                   <Text style={{ marginTop: 2 }}>
-                    <Text style={{ fontWeight: "bold" }}>Học hàm: </Text> 1ádasd
+                    <Text style={{ fontWeight: "bold" }}>Học hàm: </Text> {lecturer.hocHam}
                   </Text>
                   <Text style={{ marginTop: 2 }}>
-                    <Text style={{ fontWeight: "bold" }}>Học vị: </Text> 1ádsdsd
+                    <Text style={{ fontWeight: "bold" }}>Học vị: </Text> {lecturer.hocVi}
                   </Text>
                   <Text style={{ marginTop: 2 }}>
-                    <Text style={{ fontWeight: "bold" }}>Khoa viện: </Text> 1ádd
+                    <Text style={{ fontWeight: "bold" }}>Khoa viện: </Text> {lecturer.khoaVien}
                   </Text>
                   <Text style={{ marginTop: 2 }}>
-                    <Text style={{ fontWeight: "bold" }}>Thâm niên: </Text>{" "}
-                    1sdasdasd
+                    <Text style={{ fontWeight: "bold" }}>Thâm niên: </Text> {lecturer.thamNien}
                   </Text>
                   <Text style={{ marginTop: 2 }}>
-                    <Text style={{ fontWeight: "bold" }}>Bộ Môn: </Text> ádasd
+                    <Text style={{ fontWeight: "bold" }}>Bộ Môn: </Text> {lecturer.boMon}
                   </Text>
                   <Text style={{ marginTop: 2 }}>
-                    <Text style={{ fontWeight: "bold" }}>Điện thoại: </Text> 1
+                    <Text style={{ fontWeight: "bold" }}>Điện thoại: </Text> {lecturer.dienThoai}
                   </Text>
                   <Text style={{ marginTop: 2 }}>
-                    <Text style={{ fontWeight: "bold" }}>Email: </Text> 1
+                    <Text style={{ fontWeight: "bold" }}>Email: </Text> {lecturer.email}
                   </Text>
                 </View>
                 <View
@@ -130,16 +130,9 @@ export default class LecturerCard extends React.Component {
                     padding: 15,
                   }}
                 >
-                  <Text
-                    style={{
-                      marginTop: 2,
-                      color: "#7f7f7f",
-                    }}
-                  >
-                    AFAFASFASFASFASFASFF
-                  </Text>
-                  <Text style={{ marginTop: 2 }}>AFAFASFASFASFASFASFF</Text>
-                  <Text style={{ marginTop: 2 }}>AFAFASFASFASFASFASFF</Text>
+                  {lecturer.linhVuc.map((item,index) => {
+                    return <Text style={{ marginTop: 2, color: "#7f7f7f" }} key={index}>- {item}</Text>;
+                  })}
                 </View>
               </View>
             ) : (

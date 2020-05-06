@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, ImageBackground, Image, Dimensions } from "react-native";
+import { Config } from "../config";
 import {
   Container,
   Header,
@@ -15,14 +16,35 @@ import {
   View,
 } from "native-base";
 import LecturerCard from "../components/LecturerCard";
+import axios from "axios";
 
 export default class AboutScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       indexScreen: 0,
+      lecturers: [],
+      isLoading: false,
     };
   }
+
+  componentDidMount() {
+    this.loadListLecturer();
+  }
+
+  loadListLecturer = () => {
+    this.setState({ isLoading: true });
+    axios
+      .get(Config.API_URL + `/api/khoacntt/lecturer/`)
+      .then((res) => {
+        this.setState({ lecturers: res.data });
+        this.setState({ isLoading: false });
+      })
+      .catch((err) => {
+        alert("Không thể kết nối đến máy chủ.");
+        this.setState({ isLoading: false });
+      });
+  };
 
   switchScreen = (index) => {
     this.setState({ indexScreen: index });
@@ -267,18 +289,27 @@ export default class AboutScreen extends React.Component {
   };
 
   lecturer_block = () => {
+    const { isLoading } = this.state;
+    if (isLoading) {
+      return this._loadingBlock(isLoading);
+    } else {
+      return (
+        <View style={{ padding: 5 }}>
+          {this.state.lecturers.map((item,index) => {
+            return <LecturerCard key={index} lecturer={item} />;
+          })}
+        </View>
+      );
+    }
+  };
+
+  _loadingBlock(state) {
     return (
-      <View style={{ padding: 5 }}>
-       <LecturerCard />
-       <LecturerCard />
-       <LecturerCard />
-       <LecturerCard />
-       <LecturerCard />
-       <LecturerCard />
-       <LecturerCard />
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator animating={state} size="large" color="#0000ff" />
       </View>
     );
-  };
+  }
 
   render() {
     let block, active1, active2, active3, title;

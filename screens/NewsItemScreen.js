@@ -24,7 +24,7 @@ export default class NewsItemScreen extends React.Component {
     if (listArticleData == null || listArticleData == undefined) return <></>;
     return (
       <>
-        {listArticleData.map((item, index) => {
+        {listArticleData.map((item,index) => {
           return (
             <NewsItem articleData={item} onPress={this.handleItemDataOnPress} key={index} />
           );

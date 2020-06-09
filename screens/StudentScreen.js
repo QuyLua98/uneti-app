@@ -11,7 +11,7 @@ export default class StudentScreen extends React.Component {
     super(props);
     this.state = {
       isLoading: false,
-      isShowDetail: false,
+      isShowDetail: true,
       code: "",
       sessionAsp: "",
       student: {},
@@ -71,7 +71,6 @@ export default class StudentScreen extends React.Component {
   };
 
   toggleDetail = () => {
-    console.log("aaa");
     this.setState({ isShowDetail: !this.state.isShowDetail });
   };
 
@@ -140,7 +139,7 @@ export default class StudentScreen extends React.Component {
                 onPress={this.toggleDetail}
               >
                 <View style={styles.title}>
-                  <Text style={styles.titleText}>THÔNG TIN &#8595;</Text>
+                  <Text style={styles.titleText}>THÔNG TIN THÊM&#8595;</Text>
                 </View>
               </TouchableOpacity>
               <View style={styles.info2}>
@@ -160,7 +159,7 @@ export default class StudentScreen extends React.Component {
                 onPress={this.toggleDetail}
               >
                 <View style={styles.title}>
-                  <Text style={styles.titleText}>THÔNG TIN &#8593;</Text>
+                  <Text style={styles.titleText}>THÔNG TIN THÊM&#8593;</Text>
                 </View>
               </TouchableOpacity>
             </View>

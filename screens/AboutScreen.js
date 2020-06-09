@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ImageBackground, Image, Dimensions } from "react-native";
+import { StyleSheet, ImageBackground, Image, Dimensions, ActivityIndicator } from "react-native";
 import { Config } from "../config";
 import {
   Container,

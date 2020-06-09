@@ -20,6 +20,7 @@ import {
   Header,
   Left,
   Title,
+  Content,
 } from "native-base";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SESSION_ASP, CODE_SEARCH } from "../constants/Constants";
@@ -43,13 +44,11 @@ export default class StudentSearchScreen extends Component {
       //debug
       // var instance = axios.create({ withCredentials: false });
 
-      console.log(sessionAsp);
       if (sessionAsp === null) {
         this.setState({ isLoading: true });
         await axios
           .get(Config.API_URL + `/api/session`)
           .then(async (res) => {
-            console.log(res);
             await AsyncStorage.setItem(SESSION_ASP, res.data);
             this.setState({
               connected: true,

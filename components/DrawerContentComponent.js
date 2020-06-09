@@ -1,6 +1,5 @@
 import React from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { DrawerItem, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import TabBarIcon from "./TabBarIcon";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -43,6 +42,16 @@ const DrawerContentComponent = ({ navigation }) => {
               }}
             >
               <Text style={styles.item}>Đào tạo</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.itemRow}>
+            <TabBarIcon name="md-person" />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            >
+              <Text style={styles.item}>Cán bộ - Giảng viên</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.itemRow}>

@@ -65,16 +65,10 @@ export default function App(props) {
 const styles = StyleSheet.create({
   app: {
     flex: 1,
-    backgroundColor: '#84b5ff',
+    backgroundColor: '#5262af',
   },
   container: {
     flex: 1,
-  //   ...Platform.select({
-  //     android: {
-  //         marginTop: StatusBar.currentHeight
-  //     }
-  // })
-
   },
   menuButton: {
     marginLeft: 10,

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, ActivityIndicator, Platform } from "react-native";
+import { StyleSheet, ActivityIndicator, Platform, StatusBar } from "react-native";
 import { Config } from "../config";
 import {
   Container,
@@ -103,7 +103,7 @@ export default class NewsScreen extends React.Component {
       searchText
     } = this.state;
     return (
-      <Container>
+      <Container style={{backgroundColor: "#5262af"}}>
         <View
           searchBar
           style={{
@@ -112,6 +112,7 @@ export default class NewsScreen extends React.Component {
             ...Platform.select({
               android: {
                 backgroundColor: "#5262af",
+                // marginTop: StatusBar.currentHeight,
               },
               ios: {
                 backgroundColor: "#3f9afc",
@@ -142,6 +143,7 @@ export default class NewsScreen extends React.Component {
               style={{ height: 20 }}
               placeholder="Tìm kiếm"
               value={searchText}
+              onChangeText={(searchText) => this.setState({ searchText })}
               onSubmitEditing={(event) => this._searchSubmit(event)}
             />
             <Icon name="ios-search" />
@@ -210,10 +212,3 @@ export default class NewsScreen extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  header: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#d3d3d3",
-  },
-});

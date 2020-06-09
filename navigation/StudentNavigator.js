@@ -10,7 +10,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 const StudentStack = createStackNavigator();
 const StudenDetailtStack = createStackNavigator();
 
-export default class HomeScreen extends React.Component {
+export default class StudentNavigator extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};

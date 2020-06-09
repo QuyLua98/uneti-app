@@ -69,14 +69,23 @@ export default class ScheduleScreen extends React.Component {
     this.setState({ studyDates: studyDates });
   }
 
+  convertStringToDateObject = (date) => {
+    return {
+      year: date.substring(0, 4),
+      month: date.substring(5, 7),
+      day: date.substring(8, 10)
+    }
+  }
+
   onDateChange = (date) => {
     let currentSchedule = [];
+    let day2 = this.convertStringToDateObject(date.toJSON());
     this.state.schedule.forEach(s => {
-      let day1 = moment(s.ngayHoc, "YYYY-MM-DD");
-      let day2 = date.date() - 1;
-      if (day1.date() == day2) {
-        if (day1.format("M") == date.format("M")) {
-          if (day1.format("YYYY") == date.format("YYYY")) {
+      let day1 = this.convertStringToDateObject(s.ngayHoc);
+      day1.day = parseInt(day1.day) + 1;
+      if (day1.day == day2.day) {
+        if (day1.month == day2.month) {
+          if (day1.year == day2.year) {
             currentSchedule.push(Object.assign({}, s));
           }
         }

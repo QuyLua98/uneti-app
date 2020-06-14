@@ -44,11 +44,11 @@ export default class MarkTableScreen extends Component {
   }
 
   groupBy(collection, property) {
-    var i = 0,
-      val,
-      index,
-      values = [],
-      result = [];
+    let i = 0,
+        val,
+        index,
+        values = [],
+        result = [];
     for (; i < collection.length; i++) {
       val = collection[i][property];
       index = values.indexOf(val);
@@ -91,7 +91,7 @@ export default class MarkTableScreen extends Component {
                   <Picker.Item
                     label={item[0].hocKi}
                     value={index}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.id.toString()}
                   />
                 ))}
               </Picker>

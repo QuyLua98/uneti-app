@@ -56,7 +56,8 @@ export default class StudentScreen extends React.Component {
         this.setState({ isLoading: false });
       })
       .catch((res) => {
-        alert("Tải thông tin thất bại!Xin thử lại!");
+        // alert("Tải thông tin thất bại!Xin thử lại!");
+        alert(res.response.data);
         this.setState({ isLoading: false });
         this.props.navigation.goBack();
       });
@@ -150,6 +151,7 @@ export default class StudentScreen extends React.Component {
                 <Text style={styles.text}>Khoá: {student.khoa}</Text>
                 <Text style={styles.text}>Ngành: {student.chuyenNganh}</Text>
                 <Text style={styles.text}>Khoa: {student.khoaHoc}</Text>
+                <Text style={styles.text}>TB tích luỹ: {student.tbTichLuy}</Text>
               </View>
             </View>
           ) : (

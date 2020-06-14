@@ -205,7 +205,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: "center",
     justifyContent: "center",
-    alignContent: "center",
     textAlign: "center",
   },
   searchBarStyle: {

@@ -15,7 +15,7 @@ export default class EgovNavigator extends React.Component {
   EgovDetail = () => {
     return (
       <EgovDetailtStack.Navigator>
-        <EgovDetailtStack.Screen name="StudentHome" component={EgovScreen} options={{ headerShown: false }} />
+        <EgovDetailtStack.Screen name="EgovHome" component={EgovScreen} options={{ headerShown: false }} />
       </EgovDetailtStack.Navigator>
     );
   };

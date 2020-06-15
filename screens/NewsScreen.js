@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, ActivityIndicator, Platform, StatusBar } from "react-native";
+import { ActivityIndicator, Platform, StatusBar } from "react-native";
 import { Config } from "../config";
 import {
   Container,
@@ -84,7 +84,7 @@ export default class NewsScreen extends React.Component {
 
   _searchSubmit = (event) => {
     const textSearch = event.nativeEvent.text;
-    if (textSearch == "") {
+    if (textSearch === "") {
       alert("Mời nhập từ khoá cần tìm kiếm");
     } else {
       this.props.navigation.navigate("SearchNews", {
@@ -112,7 +112,7 @@ export default class NewsScreen extends React.Component {
             ...Platform.select({
               android: {
                 backgroundColor: "#5262af",
-                // marginTop: StatusBar.currentHeight,
+                marginTop: StatusBar.currentHeight,
               },
               ios: {
                 backgroundColor: "#3f9afc",

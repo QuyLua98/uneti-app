@@ -12,19 +12,22 @@ import {
     AsyncStorage,
     Keyboard,
     CheckBox,
-    Alert
+    Alert,
+    ActivityIndicator
 } from "react-native";
-import {Spinner} from 'native-base';
+import {Container, Body, Button, Header, Icon, Left, Right, Spinner, Title} from 'native-base';
 import {EGOV_TOKEN} from "../constants/Constants";
+import {DrawerActions} from "@react-navigation/native";
 
 export default class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "01027017",
-            password: "160880",
+            username: "",
+            password: "",
             isRemember: false,
             isLoading: false,
+            isLoadingToken: false,
             _0x6100: [
                 "", // 0
                 "\x2F\x43\x6F\x6D\x6D\x6F\x6E\x2F\x47\x65\x74\x50\x72\x69\x76\x61\x74\x65\x4B\x65\x79", // 1
@@ -815,32 +818,31 @@ export default class LoginScreen extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ isLoading: true });
+        this.setState({isLoadingToken: true});
         AsyncStorage.getItem(EGOV_TOKEN).then((token) => {
-          if (token) {
-            axios
-            .post(Config.API_URL + `/api/isLogin`, {
-              token: token
-            })
-            .then((res) => {
-              if(res.data) {
-                  this.props.navigation.navigate("EgovDetail", {
-                      screen: "EgovHome",
-                      params: {
-                          token: token,
-                      },
-                  });
-              };
-              this.setState({ isLoading: false });
-            }).catch(err => {
-              Alert.alert("Lỗi", "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-              this.setState({ isLoading: false });
-            })
-          } else {
-            this.setState({ isLoading: false });
-          }
+            if (token) {
+                axios
+                    .post(Config.API_URL + `/api/isLogin`, {
+                        token: token
+                    })
+                    .then((res) => {
+                        if (res.data) {
+                            this.props.navigation.navigate("EgovDetail", {
+                                screen: "EgovHome",
+                                params: {
+                                    token: token,
+                                },
+                            });
+                        }
+                        this.setState({isLoadingToken: false});
+                    }).catch(() => {
+                    Alert.alert("Lỗi", "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+                    this.setState({isLoadingToken: false});
+                })
+            } else {
+                this.setState({isLoadingToken: false});
+            }
         });
-
     }
 
     login = async () => {
@@ -864,7 +866,7 @@ export default class LoginScreen extends React.Component {
                 .then(async (res) => {
                     if (this.state.isRemember) {
                         await AsyncStorage.setItem(EGOV_TOKEN, res.data);
-                    }else {
+                    } else {
                         await AsyncStorage.removeItem(EGOV_TOKEN);
                     }
                     console.log(res.data);
@@ -876,59 +878,90 @@ export default class LoginScreen extends React.Component {
                     });
                     this.setState({isLoading: false});
                 })
-                .catch((res) => {
+                .catch(() => {
                     Alert.alert("Lỗi", "Đăng nhập thất bại.");
                     this.setState({isLoading: false});
                 });
         }
     };
 
+    _loadingBlock() {
+        return (
+            <View style={{flex: 1, justifyContent: "center"}}>
+                <ActivityIndicator
+                    animating={this.state.isLoadingToken}
+                    size="large"
+                    color="#0000ff"
+                />
+            </View>
+        );
+    }
+
     render() {
+        if (this.state.isLoadingToken) return this._loadingBlock;
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.container}>
-                    <View style={styles.header}>
-                        <Image
-                            source={require("../assets/images/icon.png")}
-                            style={styles.welcomeImage}
-                        />
-                        <Text style={styles.title}>Cán bộ - giảng viên đăng nhập</Text>
+                <Container>
+                    <Header>
+                        <Left>
+                            <Button
+                                transparent
+                                onPress={() => {
+                                    this.props.navigation.dispatch(DrawerActions.toggleDrawer());
+                                }}
+                            >
+                                <Icon name="menu"/>
+                            </Button>
+                        </Left>
+                        <Body>
+                            <Title>Login</Title>
+                        </Body>
+                        <Right></Right>
+                    </Header>
+                    <View style={styles.container}>
+                        <View style={styles.header}>
+                            <Image
+                                source={require("../assets/images/icon.png")}
+                                style={styles.welcomeImage}
+                            />
+                            <Text style={styles.title}>Cán bộ - giảng viên đăng nhập</Text>
+                        </View>
+                        <View style={styles.body}>
+                            <View style={styles.textInputContainer}>
+                                <TextInput
+                                    style={styles.textInput}
+                                    textContentType="username"
+                                    placeholder="Nhập tài khoản"
+                                    onChangeText={(text) => this.setState({username: text})}
+                                />
+                            </View>
+                            <View style={styles.textInputContainer}>
+                                <TextInput
+                                    style={styles.textInput}
+                                    textContentType="password"
+                                    secureTextEntry={true}
+                                    placeholder="Nhập mật khẩu"
+                                    onChangeText={(text) => this.setState({password: text})}
+                                />
+                            </View>
+                            <View style={styles.checkBoxContainer}>
+                                <CheckBox
+                                    value={this.state.isRemember}
+                                    onValueChange={() =>
+                                        this.setState({isRemember: !this.state.isRemember})
+                                    }
+                                    style={styles.checkbox}
+                                />
+                                <Text style={styles.label}>Ghi nhớ thông tin</Text>
+                            </View>
+                            <TouchableOpacity style={styles.loginButton} onPress={this.login}>
+                                <Text style={styles.loginButtonTitle}>ĐĂNG NHẬP</Text>
+                            </TouchableOpacity>
+                            {this.state.isLoading ? <Spinner color='red'/> : <></>}
+                        </View>
+                        <View style={styles.footer}/>
                     </View>
-                    <View style={styles.body}>
-                        <View style={styles.textInputContainer}>
-                            <TextInput
-                                style={styles.textInput}
-                                textContentType="username"
-                                placeholder="Nhập tài khoản"
-                                onChangeText={(text) => this.setState({username: text})}
-                            />
-                        </View>
-                        <View style={styles.textInputContainer}>
-                            <TextInput
-                                style={styles.textInput}
-                                textContentType="password"
-                                secureTextEntry={true}
-                                placeholder="Nhập mật khẩu"
-                                onChangeText={(text) => this.setState({password: text})}
-                            />
-                        </View>
-                        <View style={styles.checkBoxContainer}>
-                            <CheckBox
-                                value={this.state.isRemember}
-                                onValueChange={() =>
-                                    this.setState({isRemember: !this.state.isRemember})
-                                }
-                                style={styles.checkbox}
-                            />
-                            <Text style={styles.label}>Ghi nhớ thông tin</Text>
-                        </View>
-                        <TouchableOpacity style={styles.loginButton} onPress={this.login}>
-                            <Text style={styles.loginButtonTitle}>ĐĂNG NHẬP</Text>
-                        </TouchableOpacity>
-                        {this.state.isLoading ? <Spinner color='red'/> : <></>}
-                    </View>
-                    <View style={styles.footer}></View>
-                </View>
+                </Container>
             </TouchableWithoutFeedback>
         );
     }

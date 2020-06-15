@@ -149,10 +149,10 @@ export default class ScheduleScreen extends React.Component {
               />
             ) : <></>}
           </View>
-          <View style={{ height: 5, backgroundColor: "#E9EBEE" }}></View>
+          <View style={{height: 5, backgroundColor: "#E9EBEE"}}/>
           <ScrollView style={{ flex: 1 }}>
             <View>
-              {currentSchedule === undefined || currentSchedule.length == 0 ? (
+              {currentSchedule === undefined || currentSchedule.length === 0 ? (
                 <></>
               ) : (
                 currentSchedule.map((item, index) => {

@@ -21,7 +21,7 @@ export default class EgovScreen extends Component {
             token: "D2A73242126C31F1B2EEC9A1AD7D15F1E572472C6932E4D088B5A5FD1E8A2435815545D4FDE89F5C7CBD1BA9468BB77E0BCAB4F43A05C2D5CC0C900AD6FDFBF44341DCC70A4B790B9\n" +
                 "77732418B56772C4C532B464C739559F3F7F243782F6A66",
             lecture: {
-                ten: "Nguyễn Duy Quý",
+                ten: "",
                 ngaySinh: "",
                 img: "",
                 gioiTinh: "",
@@ -40,8 +40,8 @@ export default class EgovScreen extends Component {
     }
 
     componentDidMount() {
-        this.setState({ isLoading: true });
-        const { token } = this.props.route.params;
+        this.setState({isLoading: true});
+        const {token} = this.props.route.params;
         this.setState({token: token});
 
         // const { token } = this.state;
@@ -51,25 +51,25 @@ export default class EgovScreen extends Component {
         };
 
         axios
-            .get(Config.API_URL + `/api/egov/profile`, { headers })
+            .get(Config.API_URL + `/api/egov/profile`, {headers})
             .then((res) => {
-                this.setState({ lecture: res.data });
-                this.setState({ isLoading: false });
+                this.setState({lecture: res.data});
+                this.setState({isLoading: false});
             })
-            .catch((res) => {
+            .catch(() => {
                 alert("Có lỗi xảy ra!");
-                this.setState({ isLoading: false });
+                this.setState({isLoading: false});
             });
 
         axios
-            .get(Config.API_URL + `/api/egov/xem-luong`, { headers })
+            .get(Config.API_URL + `/api/egov/xem-luong`, {headers})
             .then((res) => {
                 console.log(res.data);
-                this.setState({ luong: res.data });
-                this.setState({ isLoading: false });
+                this.setState({luong: res.data});
+                this.setState({isLoading: false});
             })
-            .catch((res) => {
-                this.setState({ isLoading: false });
+            .catch(() => {
+                this.setState({isLoading: false});
             });
     }
 
@@ -77,7 +77,8 @@ export default class EgovScreen extends Component {
         try {
             await AsyncStorage.removeItem(EGOV_TOKEN);
             this.props.navigation.goBack();
-        } catch (err) {}
+        } catch (err) {
+        }
     };
 
     toggleModalSalary = () => {
@@ -91,6 +92,20 @@ export default class EgovScreen extends Component {
     onClickMenu = () => {
         this.props.navigation.toggleDrawer();
     };
+
+    lectureSchedule = () => {
+        this.props.navigation.navigate("ScheduleLectureScreen", {
+            token: this.state.token,
+            isExam: false,
+        });
+    }
+
+    examSchedule = () => {
+        this.props.navigation.navigate("ScheduleLectureScreen", {
+            token: this.state.token,
+            isExam: true,
+        });
+    }
 
     render() {
         const {isModalSalaryVisible, isModalProfileVisible, lecture, isLoading, luong} = this.state;
@@ -120,7 +135,7 @@ export default class EgovScreen extends Component {
                                 <Icon name="menu" style={{color: "#fff"}}/>
                             </Button>
                         </Left>
-                        <Body></Body>
+                        <Body/>
                         <Right>
                             <TouchableOpacity activeOpacity={0.6} onPress={this.logout}>
                                 <Text style={{marginRight: 10, fontSize: 15, color: "#fff"}}>Đăng xuất</Text>
@@ -128,7 +143,7 @@ export default class EgovScreen extends Component {
                         </Right>
                     </Header>
                     <Content>
-                        <View style={styles.header}></View>
+                        <View style={styles.header}/>
                         <Image
                             style={styles.avatar}
                             source={{
@@ -142,13 +157,14 @@ export default class EgovScreen extends Component {
                                     <Text style={styles.info}>Xem thông tin chi tiết</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
+                                    onPress={this.lectureSchedule}
                                     style={[styles.buttonContainer, {backgroundColor: "#a2cc5a"}]}
                                 >
                                     <Text style={{fontSize: 15, color: "#fff"}}>
                                         Xem lịch dạy
                                     </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonContainer}>
+                                <TouchableOpacity onPress={this.examSchedule} style={styles.buttonContainer}>
                                     <Text style={{fontSize: 15, color: "#fff"}}>
                                         Xem lịch coi thi
                                     </Text>
@@ -233,46 +249,48 @@ export default class EgovScreen extends Component {
                         <View style={styles.modalInsideView}>
                             <View style={styles.salaryContent}>
                                 {luong != null ? <>
-                                <Text style={styles.titleSalary}>Các khoản thu nhập: </Text>
-                                <List>
-                                    <ListItem
-                                        itemDivider
-                                        style={{flexDirection: "column"}}
-                                    >
-                                        <View style={styles.bodyListView}>
-                                            <Text style={styles.bodyRowText}>Nội dung</Text>
-                                            <Text style={styles.bodyRowText}>Số tiền</Text>
-                                            <Text style={styles.bodyRowText}>Tính thuế</Text>
-                                        </View>
-                                        {luong.luong.map(l => (
-                                            <View style={styles.data}>
-                                                <Text style={styles.dataRowText}>{l.noiDung}</Text>
-                                                <Text style={styles.dataRowText}>{l.soTien}</Text>
-                                                <Text style={styles.dataRowText}>{l.tinhThue}</Text>
-                                            </View>))}
-                                    </ListItem>
-                                </List>
-                                <Text style={styles.titleSalary}>Các khoản khấu trừ: </Text>
-                                <List>
-                                    <ListItem
-                                        itemDivider
-                                        style={{flexDirection: "column"}}
-                                    >
-                                        <View style={styles.bodyListView}>
-                                            <Text style={styles.bodyRowText}>Nội dung</Text>
-                                            <Text style={styles.bodyRowText}>Số tiền</Text>
-                                            <Text style={styles.bodyRowText}>Tính thuế</Text>
-                                        </View>
-                                        {luong.khauTru.map(l => (
-                                        <View style={styles.data}>
-                                            <Text style={styles.dataRowText}>{l.noiDung}</Text>
-                                            <Text style={styles.dataRowText}>{l.soTien}</Text>
-                                            <Text style={styles.dataRowText}>{l.tinhThue}</Text>
-                                        </View>))}
-                                    </ListItem>
-                                </List>
-                                <Text style={[styles.titleSalary, {fontWeight: 'bold', marginTop: 10}]}>Thực lãnh lương cơ bản: {luong.luongCoBan}</Text>
-                                <Text style={[styles.titleSalary, {fontWeight: 'bold'}]}>Thực lãnh lương tăng thêm: {luong.luongTang}</Text>
+                                    <Text style={styles.titleSalary}>Các khoản thu nhập: </Text>
+                                    <List>
+                                        <ListItem
+                                            itemDivider
+                                            style={{flexDirection: "column"}}
+                                        >
+                                            <View style={styles.bodyListView}>
+                                                <Text style={styles.bodyRowText}>Nội dung</Text>
+                                                <Text style={styles.bodyRowText}>Số tiền</Text>
+                                                <Text style={styles.bodyRowText}>Tính thuế</Text>
+                                            </View>
+                                            {luong.luong.map(l => (
+                                                <View style={styles.data}>
+                                                    <Text style={styles.dataRowText}>{l.noiDung}</Text>
+                                                    <Text style={styles.dataRowText}>{l.soTien}</Text>
+                                                    <Text style={styles.dataRowText}>{l.tinhThue}</Text>
+                                                </View>))}
+                                        </ListItem>
+                                    </List>
+                                    <Text style={styles.titleSalary}>Các khoản khấu trừ: </Text>
+                                    <List>
+                                        <ListItem
+                                            itemDivider
+                                            style={{flexDirection: "column"}}
+                                        >
+                                            <View style={styles.bodyListView}>
+                                                <Text style={styles.bodyRowText}>Nội dung</Text>
+                                                <Text style={styles.bodyRowText}>Số tiền</Text>
+                                                <Text style={styles.bodyRowText}>Tính thuế</Text>
+                                            </View>
+                                            {luong.khauTru.map(l => (
+                                                <View style={styles.data}>
+                                                    <Text style={styles.dataRowText}>{l.noiDung}</Text>
+                                                    <Text style={styles.dataRowText}>{l.soTien}</Text>
+                                                    <Text style={styles.dataRowText}>{l.tinhThue}</Text>
+                                                </View>))}
+                                        </ListItem>
+                                    </List>
+                                    <Text style={[styles.titleSalary, {fontWeight: 'bold', marginTop: 10}]}>Thực lãnh
+                                        lương cơ bản: {luong.luongCoBan}</Text>
+                                    <Text style={[styles.titleSalary, {fontWeight: 'bold'}]}>Thực lãnh lương tăng
+                                        thêm: {luong.luongTang}</Text>
                                 </> : <Text style={styles.titleSalary}>Lương tháng hiện tại chưa có.</Text>
                                 }
                             </View>

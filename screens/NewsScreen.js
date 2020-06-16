@@ -112,7 +112,7 @@ export default class NewsScreen extends React.Component {
             ...Platform.select({
               android: {
                 backgroundColor: "#5262af",
-                marginTop: StatusBar.currentHeight,
+                // marginTop: StatusBar.currentHeight,
               },
               ios: {
                 backgroundColor: "#3f9afc",

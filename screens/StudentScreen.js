@@ -56,8 +56,8 @@ export default class StudentScreen extends React.Component {
         this.setState({ isLoading: false });
       })
       .catch((res) => {
-        // alert("Tải thông tin thất bại!Xin thử lại!");
-        alert(res.response.data);
+        alert("Tải thông tin thất bại!Xin thử lại!");
+        // alert(res.response.data);
         this.setState({ isLoading: false });
         this.props.navigation.goBack();
       });

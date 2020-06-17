@@ -82,7 +82,7 @@ export default class ScheduleScreen extends React.Component {
     let day2 = this.convertStringToDateObject(date.toJSON());
     this.state.schedule.forEach(s => {
       let day1 = this.convertStringToDateObject(s.ngayHoc);
-      day1.day = parseInt(day1.day) + 1;
+      day1.day = parseInt(day1.day);
       if (day1.day == day2.day) {
         if (day1.month == day2.month) {
           if (day1.year == day2.year) {

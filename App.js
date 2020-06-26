@@ -45,7 +45,7 @@ export default function App(props) {
   } else {
     return (
       <SafeAreaView style={styles.app}>
-        <StatusBar />
+        <StatusBar barStyle="dark-content" />
         <Container style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <NavigationContainer ref={containerRef} initialState={initialNavigationState}>

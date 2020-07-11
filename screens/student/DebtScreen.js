@@ -1,7 +1,7 @@
 import * as React from "react";
-import { StyleSheet, ActivityIndicator } from "react-native";
-import { SESSION_ASP, CODE_SEARCH } from "../constants/Constants";
-import { Config } from "../config";
+import { StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { SESSION_ASP, CODE_SEARCH } from "../../constants/Constants";
+import { Config } from "../../config";
 import {
   Container,
   Content,
@@ -17,7 +17,7 @@ import {
   ListItem,
   View,
 } from "native-base";
-import DebtItem from "../components/DebtItem";
+import DebtItem from "../../components/DebtItem";
 import axios from "axios";
 
 export default class DebtScreen extends React.Component {
@@ -45,7 +45,7 @@ export default class DebtScreen extends React.Component {
         this.setState({ isLoading: false });
       })
       .catch((res) => {
-        alert("Tải thông tin thất bại!Xin thử lại!");
+        Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
         this.setState({ isLoading: false });
         this.props.navigation.goBack();
       });

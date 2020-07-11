@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Container, Content, List } from "native-base";
-import NewsItem from "../components/NewsItem";
+import NewsItem from "../../components/NewsItem";
 
 export default class NewsItemScreen extends React.Component {
   constructor(props) {

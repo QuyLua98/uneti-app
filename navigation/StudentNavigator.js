@@ -1,10 +1,10 @@
 import * as React from "react";
-import StudentSearchScreen from "../screens/StudentSearchScreen";
-import StudentScreen from "../screens/StudentScreen";
-import MarkTableScreen from "../screens/MarkTableScreen";
-import DebtScreen from "../screens/DebtScreen";
-import ScheduleScreen from "../screens/ScheduleScreen";
-import ScheduleTestScreen from "../screens/ScheduleTestScreen";
+import StudentSearchScreen from "../screens/student/StudentSearchScreen";
+import StudentScreen from "../screens/student/StudentScreen";
+import MarkTableScreen from "../screens/student/MarkTableScreen";
+import DebtScreen from "../screens/student/DebtScreen";
+import ScheduleScreen from "../screens/student/ScheduleScreen";
+import ScheduleTestScreen from "../screens/student/ScheduleTestScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 const StudentStack = createStackNavigator();

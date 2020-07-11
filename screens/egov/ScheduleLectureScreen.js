@@ -1,8 +1,8 @@
 import * as React from "react";
-import {EGOV_TOKEN} from "../constants/Constants";
-import {Config} from "../config";
-import ScheduleLectureItem from "../components/ScheduleLectureItem";
-import {StyleSheet, ActivityIndicator} from 'react-native';
+import {EGOV_TOKEN} from "../../constants/Constants";
+import {Config} from "../../config";
+import ScheduleLectureItem from "../../components/ScheduleLectureItem";
+import {StyleSheet, ActivityIndicator, Alert} from 'react-native';
 import {
     View,
     Container,
@@ -53,7 +53,7 @@ export default class ScheduleLectureScreen extends React.Component {
                 this.setState({isLoading: false});
             })
             .catch(() => {
-                alert("Tải thông tin thất bại!Xin thử lại!");
+                Alert.alert("Có lỗi xảy ra", "Tải thông tin thất bại!Xin thử lại!");
                 this.setState({isLoading: false});
                 this.props.navigation.goBack();
             });

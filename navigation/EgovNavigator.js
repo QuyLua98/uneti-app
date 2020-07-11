@@ -1,8 +1,8 @@
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import EgovScreen from "../screens/EgovScreen";
-import LoginScreen from "../screens/LoginScreen";
-import ScheduleLectureScreen from "../screens/ScheduleLectureScreen";
+import EgovScreen from "../screens/egov/EgovScreen";
+import LoginScreen from "../screens/egov/LoginScreen";
+import ScheduleLectureScreen from "../screens/egov/ScheduleLectureScreen";
 
 const EgovStack = createStackNavigator();
 const EgovDetailtStack = createStackNavigator();

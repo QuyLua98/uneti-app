@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ImageBackground, Image, Dimensions, ActivityIndicator } from "react-native";
+import { Alert, StyleSheet, ImageBackground, Image, Dimensions, ActivityIndicator } from "react-native";
 import { Config } from "../config";
 import {
   Container,
@@ -41,7 +41,7 @@ export default class AboutScreen extends React.Component {
         this.setState({ isLoading: false });
       })
       .catch((err) => {
-        alert("Không thể kết nối đến máy chủ.");
+          Alert.alert("Có lỗi xảy ra", "Không thể kết nối đến máy chủ.");
         this.setState({ isLoading: false });
       });
   };

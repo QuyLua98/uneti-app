@@ -1,6 +1,6 @@
 import * as React from "react";
-import {ActivityIndicator, Platform} from "react-native";
-import {Config} from "../config";
+import {ActivityIndicator, Alert} from "react-native";
+import {Config} from "../../config";
 import {
     Container,
     Text,
@@ -9,7 +9,7 @@ import {
     View,
     Content,
     Input,
-    InputGroup,
+    InputGroup, Left, Item, Header,
 } from "native-base";
 import NewsItemScreen from "./NewsItemScreen";
 import axios from "axios";
@@ -37,7 +37,7 @@ export default class SearchNewsScreen extends React.Component {
                 this.setState({isLoading: false});
             })
             .catch(() => {
-                alert("Không thể kết nối đến máy chủ.");
+                Alert.alert("Lỗi", "Không thể kết nối đến máy chủ.");
                 this.setState({news: null});
                 this.setState({isLoading: false});
             });
@@ -58,7 +58,7 @@ export default class SearchNewsScreen extends React.Component {
     _searchSubmit = (event) => {
         const textSearch = event.nativeEvent.text;
         if (textSearch === "") {
-            alert("Mời nhập từ khoá cần tìm kiếm");
+            Alert.alert("Lưu ý", "Mời nhập từ khoá cần tìm kiếm");
         } else {
             this.loadingSearchNews(textSearch);
         }
@@ -68,48 +68,30 @@ export default class SearchNewsScreen extends React.Component {
         const {news, isLoading} = this.state;
         return (
             <Container>
-                <View
-                    searchBar
-                    style={{
-                        flexDirection: "row",
-                        padding: 10,
-                        ...Platform.select({
-                            android: {
-                                backgroundColor: "#5262af",
-                            },
-                            ios: {
-                                backgroundColor: "#3f9afc",
-                            },
-                        }),
-                    }}
-                >
-                    <Button
-                        transparent
-                        iconLeft
-                        style={{height: 30, marginRight: 15}}
-                        onPress={this.onClickBack}
-                    >
-                        <Icon name="md-arrow-back" style={{color: "#fff"}}/>
-                    </Button>
-
-                    <InputGroup
-                        rounded
-                        style={{
-                            flex: 1,
-                            backgroundColor: "#fff",
-                            height: 30,
-                            paddingLeft: 10,
-                            paddingRight: 10,
-                        }}
-                    >
-                        <Input
-                            style={{height: 20}}
-                            placeholder="Tìm kiếm"
-                            onSubmitEditing={(event) => this._searchSubmit(event)}
+                <Header searchBar rounded>
+                    <Left style={{flex: null}}>
+                        <Button
+                            transparent
+                            onPress={this.onClickBack}
+                        >
+                            <Icon name="md-arrow-back" style={{color: "#fff"}}/>
+                        </Button>
+                    </Left>
+                    <Item style={{borderRadius: 25}}>
+                        <Input placeholder="Tìm kiếm"
+                               style={{
+                                   paddingLeft: 10,
+                                   paddingRight: 10,
+                               }}
+                               // onChangeText={(searchText) => this.setState({searchText})}
+                               onSubmitEditing={(event) => this._searchSubmit(event)}
                         />
                         <Icon name="ios-search"/>
-                    </InputGroup>
-                </View>
+                    </Item>
+                    <Button transparent>
+                        <Text>Search</Text>
+                    </Button>
+                </Header>
                 <Content>
                     {isLoading ?
                         this._loadingBlock(isLoading)

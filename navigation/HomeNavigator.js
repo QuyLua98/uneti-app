@@ -1,6 +1,6 @@
 import * as React from "react";
-import NewsScreen from "../screens/NewsScreen";
-import SearchNewsScreen from "../screens/SearchNewsScreen";
+import NewsScreen from "../screens/khoacntt/NewsScreen";
+import SearchNewsScreen from "../screens/khoacntt/SearchNewsScreen";
 import Modal from "../components/Modal";
 import { createStackNavigator } from "@react-navigation/stack";
 

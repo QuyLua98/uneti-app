@@ -1,9 +1,9 @@
 import * as React from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { SESSION_ASP, CODE_SEARCH } from "../constants/Constants";
-import { Config } from "../config";
-import ScheduleItem from "../components/ScheduleItem";
-import { ActivityIndicator } from 'react-native';
+import { SESSION_ASP, CODE_SEARCH } from "../../constants/Constants";
+import { Config } from "../../config";
+import ScheduleItem from "../../components/ScheduleItem";
+import { ActivityIndicator, Alert } from 'react-native';
 import {
   View,
   Container,
@@ -50,7 +50,7 @@ export default class ScheduleScreen extends React.Component {
         this.setState({ isLoading: false });
       })
       .catch((res) => {
-        alert("Tải thông tin thất bại!Xin thử lại!");
+        Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
         this.setState({ isLoading: false });
         this.props.navigation.goBack();
       });

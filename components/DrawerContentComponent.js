@@ -6,7 +6,6 @@ import {ScrollView} from "react-native-gesture-handler";
 const DrawerContentComponent = ({navigation}) => {
     return (
         <SafeAreaView>
-            <StatusBar />
             <ScrollView contentContainerStyle={styles.container}>
                 <View>
                     <View style={styles.image}>
@@ -64,6 +63,16 @@ const DrawerContentComponent = ({navigation}) => {
                                 }}
                             >
                                 <Text style={styles.item}>Thông tin sinh viên</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.itemRow}>
+                            <TabBarIcon name="md-person"/>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("ChattingLogin");
+                                }}
+                            >
+                                <Text style={styles.item}>Chatting</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.itemRow}>

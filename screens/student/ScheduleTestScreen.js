@@ -1,9 +1,9 @@
 import * as React from "react";
 import { ScrollView, SafeAreaView } from "react-native";
-import { SESSION_ASP, CODE_SEARCH } from "../constants/Constants";
-import { Config } from "../config";
-import ScheduleTestItem from "../components/ScheduleTestItem";
-import { ActivityIndicator } from "react-native";
+import { SESSION_ASP, CODE_SEARCH } from "../../constants/Constants";
+import { Config } from "../../config";
+import ScheduleTestItem from "../../components/ScheduleTestItem";
+import { ActivityIndicator, Alert } from "react-native";
 import {
   View,
   Container,
@@ -60,7 +60,7 @@ export default class ScheduleTestScreen extends React.Component {
         this.setState({ isLoading: false });
       })
       .catch((res) => {
-        alert("Tải thông tin thất bại!Xin thử lại!");
+        Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
         this.setState({ isLoading: false });
       });
   }
@@ -84,7 +84,7 @@ export default class ScheduleTestScreen extends React.Component {
         this.setState({ isLoadingBody: false });
       })
       .catch((res) => {
-        alert("Tải thông tin thất bại!Xin thử lại!");
+        Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
         this.setState({ isLoadingBody: false });
       });
   };

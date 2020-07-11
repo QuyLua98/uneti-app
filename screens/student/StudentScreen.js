@@ -1,10 +1,10 @@
 import React from "react";
 import axios from "axios";
-import { Config } from "../config";
+import { Config } from "../../config";
 import { Thumbnail, Button, View, Text, Container, Header, Left, Right, Icon, Body, Title } from "native-base";
-import { SESSION_ASP, CODE_SEARCH } from "../constants/Constants";
-import { StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from "react-native";
-import GridHomeMenu from "../components/GridHomeMenu";
+import { SESSION_ASP, CODE_SEARCH } from "../../constants/Constants";
+import { StyleSheet, ActivityIndicator, Alert, TouchableOpacity, ScrollView } from "react-native";
+import GridHomeMenu from "../../components/GridHomeMenu";
 
 export default class StudentScreen extends React.Component {
   constructor(props) {
@@ -17,22 +17,22 @@ export default class StudentScreen extends React.Component {
       student: {},
       menuMark: {
         title: "KẾT QUẢ HỌC TẬP",
-        image: require("../assets/images/point-analyze.png"),
+        image: require("../../assets/images/point-analyze.png"),
         link: "MarkTable",
       },
       menuSchedule: {
         title: "LỊCH HỌC",
-        image: require("../assets/images/calendar.png"),
+        image: require("../../assets/images/calendar.png"),
         link: "Schedule",
       },
       menuTestSchedule: {
         title: "LỊCH THI",
-        image: require("../assets/images/calendar-with-clock.png"),
+        image: require("../../assets/images/calendar-with-clock.png"),
         link: "ScheduleTest",
       },
       menuDebt: {
         title: "CÔNG NỢ",
-        image: require("../assets/images/money.png"),
+        image: require("../../assets/images/money.png"),
         link: "DebtTable",
       },
     };
@@ -56,7 +56,7 @@ export default class StudentScreen extends React.Component {
         this.setState({ isLoading: false });
       })
       .catch((res) => {
-        alert("Tải thông tin thất bại!Xin thử lại!");
+        Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
         // alert(res.response.data);
         this.setState({ isLoading: false });
         this.props.navigation.goBack();

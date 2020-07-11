@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import axios from 'axios';
-import {Config} from "../config";
-import {EGOV_TOKEN} from "../constants/Constants";
-import {StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, Modal, AsyncStorage} from "react-native";
+import {Config} from "../../config";
+import {EGOV_TOKEN} from "../../constants/Constants";
+import {StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, Modal, AsyncStorage, Alert} from "react-native";
 import {
     Container,
     Content,
@@ -57,7 +57,7 @@ export default class EgovScreen extends Component {
                 this.setState({isLoading: false});
             })
             .catch(() => {
-                alert("Có lỗi xảy ra!");
+                Alert.alert("Có lỗi xảy ra");
                 this.setState({isLoading: false});
             });
 
@@ -123,7 +123,7 @@ export default class EgovScreen extends Component {
                 <Container>
                     {isModalSalaryVisible || isModalProfileVisible ? <Image
                         style={{width: '100%', opacity: 0.8, position: 'absolute', zIndex: 999}}
-                        source={require('../assets/images/black-background.png')}/> : <></>}
+                        source={require('../../assets/images/black-background.png')}/> : <></>}
                     <Header>
                         <Left>
                             <Button

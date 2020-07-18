@@ -1,6 +1,7 @@
 const tintColor = '#2f95dc';
 
 export default {
+  white: "#fff",
   brandInfo: "#007aff",
   brandLight: "#f4f4f4",
   tintColor,
@@ -13,4 +14,6 @@ export default {
   warningText: '#666804',
   noticeBackground: tintColor,
   noticeText: '#fff',
+  gray: '#808080',
+  green: '#48cc2d',
 };

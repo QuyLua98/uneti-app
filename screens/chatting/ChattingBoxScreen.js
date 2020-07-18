@@ -22,7 +22,6 @@ import {
     ListItem,
     Thumbnail
 } from 'native-base';
-import LineChat from "./components/LineChat";
 import {DrawerActions} from "@react-navigation/native";
 import {GiftedChat} from 'react-native-gifted-chat';
 import {socketsMessageSend} from "../../store/chat/action";

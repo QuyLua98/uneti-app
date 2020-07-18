@@ -1,27 +1,27 @@
 import React, {Component} from "react";
 
 import {
-    Text,
-    TouchableOpacity,
+    StyleSheet,
+    FlatList,
 } from "react-native";
 import {
     Container,
+    View,
     Body,
-    Content,
     Button,
     Header,
     Icon,
     Left,
     Right,
-    List,
     Title,
-    ListItem,
-    Thumbnail
 } from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
 import {socketsConnect, socketsSubscribe} from "../../store/chat/action";
 import {connect} from 'react-redux';
 import {ENDPOINT_BROKER} from '../../constants/Constants';
+import SearchBar from "./components/SearchBar";
+import UserSlide from "./components/UserSlide";
+import ChatItemBox from "./components/ChatItemBox";
 
 class ChattingTableScreen extends Component {
     constructor(props) {
@@ -64,25 +64,20 @@ class ChattingTableScreen extends Component {
                     </Body>
                     <Right/>
                 </Header>
-                <Content>
-                    <List>
-                        <ListItem avatar button={true}
-                                  onPress={() => {
-                                      this.handleClick()
-                                  }}>
-                            <Left>
-                                <Thumbnail source={require('../../assets/images/chatting/avatar/account-female.png')}/>
-                            </Left>
-                            <Body>
-                                <Text>Kumar</Text>
-                                <Text note>Doing what you like will always keep you happy . .</Text>
-                            </Body>
-                            <Right>
-                                <Text note>3:43 pm</Text>
-                            </Right>
-                        </ListItem>
-                    </List>
-                </Content>
+                <View contentContainerStyle={{flex: 1}}>
+                    <View>
+                        <SearchBar/>
+                    </View>
+                    <View style={styles.userSlide}>
+                        <UserSlide />
+                    </View>
+                    <FlatList
+                        data={[",", ",", ""]}
+                        renderItem={() => {
+                            return <ChatItemBox/>
+                        }}
+                    />
+                </View>
             </Container>
         );
     };
@@ -91,5 +86,11 @@ class ChattingTableScreen extends Component {
 const mapStateToProps = state => ({
     chatting: state.chatting
 });
-const mapDispatchToProps = { socketsSubscribe, socketsConnect };
+const mapDispatchToProps = {socketsSubscribe, socketsConnect};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
+
+const styles = StyleSheet.create({
+    userSlide: {
+        marginLeft: 17
+    }
+})

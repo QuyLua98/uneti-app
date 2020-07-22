@@ -26,27 +26,39 @@ import LineChat from "./components/LineChat";
 import {DrawerActions} from "@react-navigation/native";
 import {GiftedChat} from 'react-native-gifted-chat';
 import {socketsMessageSend} from "../../store/chat/action";
+import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
+import MessageStatus from "./components/MessageStatus";
+import MessageType from "./components/MessageType";
 
 class ChattingBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
-            password: "",
-            isRemember: false,
-            isLoading: false,
-            isLoadingToken: false,
+            userId: null,
         }
 
 
     }
 
-    onSend = (messages) => {
+    componentDidMount() {
+        const {userId} = this.props.route.params;
+        this.setState({userId: userId});
+    }
 
-        alert(messages);
+    onSend = (messages) => {
+        const messageEntity = {
+            status: MessageStatus.SENT,
+            type: MessageType.TEXT,
+            content: messages[0].text,
+            sender: "",
+            sendToUser: messages[0].user._id,
+            createdDate: messages[0].createdAt
+        }
+        this.props.socketsMessageSend(messageEntity, ENDPOINT_SEND_MESSAGE, null);
     }
 
     render() {
+        const {userId} = this.state;
         return (
             <Container>
                 <Header>
@@ -65,13 +77,16 @@ class ChattingBox extends Component {
                     </Body>
                     <Right/>
                 </Header>
-                    <GiftedChat
-                        messages={this.props.chatting.messages}
-                        onSend={messages => this.onSend(messages)}
-                        user={{
-                            _id: 1,
-                        }}
-                    />
+                <GiftedChat
+                    messages={this.props.chatting.messages}
+                    onSend={messages => this.onSend(messages)}
+                    user={{
+                        _id: userId,
+                    }}
+                />
+                {/*{*/}
+                {/*    Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />*/}
+                {/*}*/}
             </Container>
         );
     };
@@ -80,7 +95,7 @@ class ChattingBox extends Component {
 const mapStateToProps = state => ({
     chatting: state.chatting
 });
-const mapDispatchToProps = { socketsMessageSend };
+const mapDispatchToProps = {socketsMessageSend};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingBox);
 
 const styles = StyleSheet.create({})

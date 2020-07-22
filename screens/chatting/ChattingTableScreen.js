@@ -27,22 +27,22 @@ class ChattingTableScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
-            password: "",
-            isRemember: false,
-            isLoading: false,
-            isLoadingToken: false,
+
         }
     }
 
     componentDidMount() {
         this.props.socketsConnect();
         // this.props.socketsSubscribe(ENDPOINT_BROKER);
+        console.log(this.props.chatting);
+
     }
 
     handleClick = () => {
         // this.props.navigation.navigate('ChattingBox');
-        this.props.socketsConnect();
+        this.props.navigation.navigate("ChattingBox", {
+            userId: "ltthieu",
+        });
     }
 
     render() {

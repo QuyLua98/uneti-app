@@ -72,7 +72,7 @@ export const wsMiddleware = store => next => action => {
         case types.SOCKETS_MESSAGE_SEND:
             stompClient.publish({
                 destination: action.payload.api,
-                body: action.payload.data
+                body: JSON.stringify(action.payload.data)
             });
             store.dispatch(chattingAction.socketsMessageSending(action.payload.data));
             break;

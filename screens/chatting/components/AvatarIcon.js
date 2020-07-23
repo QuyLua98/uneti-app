@@ -13,7 +13,7 @@ export default class AvatarIcon extends React.Component {
             <View style={styles.container}>
                 <Thumbnail
                     style={styles.avatar}
-                    source={require('../../../assets/images/chatting/avatar/account-male-128x128.png')}
+                    source={require('../../../assets/images/chatting/avatar/avatar-quy.jpg')}
                 />
                 {
                     this.props.isActive ? <View style={styles.dot} /> : <></>
@@ -28,18 +28,22 @@ const styles = StyleSheet.create({
         margin: 10,
         width: 50,
         height: 50,
-        borderRadius: 50,
+        borderRadius: 45,
         backgroundColor: Colors.white,
     },
     avatar: {
         flex: 1,
+        width: 50,
+        height: 50,
         borderRadius: 50,
     },
     dot: {
+        borderColor: Colors.gray,
+        borderWidth: 0.5,
         margin: 5,
         position: "absolute",
-        bottom: -10,
-        right: -10,
+        bottom: -7,
+        right: -7,
         width: 15,
         height: 15,
         borderRadius: 15,

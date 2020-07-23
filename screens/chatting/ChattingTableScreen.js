@@ -32,7 +32,7 @@ class ChattingTableScreen extends Component {
     }
 
     componentDidMount() {
-        this.props.socketsConnect();
+        // this.props.socketsConnect();
         // this.props.socketsSubscribe(ENDPOINT_BROKER);
         console.log(this.props.chatting);
 
@@ -72,9 +72,9 @@ class ChattingTableScreen extends Component {
                         <UserSlide />
                     </View>
                     <FlatList
-                        data={[",", ",", ""]}
+                        data={[","]}
                         renderItem={() => {
-                            return <ChatItemBox/>
+                            return <ChatItemBox onClick={this.handleClick} />
                         }}
                     />
                 </View>

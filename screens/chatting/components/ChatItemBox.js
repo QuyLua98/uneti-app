@@ -1,6 +1,7 @@
 import {Body, Left, ListItem, Right, Thumbnail} from "native-base";
 import {Text} from "react-native";
 import React, {Component} from "react";
+import AvatarIcon from "./AvatarIcon";
 
 export default class ChatItemBox extends Component {
     constructor(props) {
@@ -18,14 +19,15 @@ export default class ChatItemBox extends Component {
         return (
             <ListItem avatar button={true}
                       onPress={() => {
-                          this.handleClick()
+                          this.props.onClick()
                       }}>
                 <Left>
-                    <Thumbnail source={require('../../../assets/images/chatting/avatar/account-female.png')}/>
+                    {/*<Thumbnail source={require('../../../assets/images/chatting/avatar/avatar-quy.jpg')}/>*/}
+                    <AvatarIcon isActive={true} />
                 </Left>
                 <Body>
-                    <Text>Kumar</Text>
-                    <Text note>Doing what you like will always keep you happy . .</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 17}}>Nguyễn Duy Quý</Text>
+                    <Text note>Bạn: Cô chào em</Text>
                 </Body>
                 <Right>
                     <Text note>3:43 pm</Text>

@@ -28,6 +28,7 @@ import {socketsMessageSend} from "../../store/chat/action";
 import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
 import MessageStatus from "./components/MessageStatus";
 import MessageType from "./components/MessageType";
+import Colors from "../../constants/Colors";
 
 class ChattingBox extends Component {
     constructor(props) {
@@ -35,8 +36,6 @@ class ChattingBox extends Component {
         this.state = {
             userId: null,
         }
-
-
     }
 
     componentDidMount() {
@@ -65,22 +64,24 @@ class ChattingBox extends Component {
                         <Button
                             transparent
                             onPress={() => {
-                                this.props.navigation.dispatch(DrawerActions.toggleDrawer());
+                                this.props.navigation.goBack();
                             }}
                         >
-                            <Icon name="menu"/>
+                            <Icon name="arrow-back"/>
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Chat</Title>
+                        <Title>Nguyễn Duy Quý</Title>
                     </Body>
-                    <Right/>
+                    <Right>
+                        <Icon name="alert" style={{color: Colors.white}}/>
+                    </Right>
                 </Header>
                 <GiftedChat
                     messages={this.props.chatting.messages}
                     onSend={messages => this.onSend(messages)}
                     user={{
-                        _id: userId,
+                        _id: 1,
                     }}
                 />
                 {/*{*/}

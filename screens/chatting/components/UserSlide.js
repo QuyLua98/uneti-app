@@ -12,10 +12,10 @@ export default class UserSlide extends Component {
     render() {
         return (
             <FlatList
-                data={[",", ",",",", ",",",", ",",",", ",",",", ",",",", ","]}
+                data={[","]}
                 horizontal={true}
                 renderItem={() => {
-                    return <AvatarIcon />
+                    return <AvatarIcon isActive={true} />
                 }}
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}

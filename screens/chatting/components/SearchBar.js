@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {StyleSheet, Platform} from "react-native";
+import {StyleSheet, Platform, TouchableOpacity} from "react-native";
 import {View, Item, Input, Icon} from "native-base";
 import Colors from "../../../constants/Colors";
 
@@ -15,15 +15,24 @@ export default class SearchBar extends Component {
         this.setState({text: val})
     }
 
+
+    clearSearchText = () => {
+        this.setState({text: ""});
+    }
+
     render() {
         const {text} = this.state;
         return (
             <View style={styles.container}>
                 <Item regular style={styles.item}>
                     <Icon name="search" style={styles.icon}/>
-                    <Input clearButtonMode={'while-editing'} placeholder='Tìm kiếm' style={styles.input} onChangeText={this.onChangeText} />
+                    <Input clearButtonMode={'while-editing'} placeholder='Tìm kiếm' value={text} style={styles.input} onChangeText={this.onChangeText} />
                     {
-                        Platform.OS === 'android' && text !== "" ? <Icon name="close-circle-outline" style={styles.icon}/> : <></>
+                        Platform.OS === 'android' && text !== "" ?
+                            <TouchableOpacity onPress={this.clearSearchText}>
+                                <Icon name="close-circle-outline" style={styles.icon}/>
+                            </TouchableOpacity>
+                            : <></>
                     }
                 </Item>
             </View>

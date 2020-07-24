@@ -67,7 +67,7 @@ class ChattingTableScreen extends Component {
                         <SearchBar/>
                     </View>
                     <View style={styles.userSlide}>
-                        <UserSlide/>
+                        <UserSlide onClick={this.handleClick} />
                     </View>
                     <FlatList
                         data={[",", "", ""]}

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {FlatList, StyleSheet} from "react-native";
+import {FlatList, StyleSheet, TouchableOpacity} from "react-native";
 import {Thumbnail, View} from "native-base";
 import Colors from "../../../constants/Colors";
 import AvatarIcon from "./AvatarIcon";
@@ -10,12 +10,17 @@ export default class UserSlide extends Component {
     }
 
     render() {
+        const props = this.props;
         return (
             <FlatList
                 data={[","]}
                 horizontal={true}
                 renderItem={() => {
-                    return <AvatarIcon isActive={true} />
+                    return (
+                        <TouchableOpacity onPress={() => props.onClick()}>
+                            <AvatarIcon isActive={true} />
+                        </TouchableOpacity>
+                        )
                 }}
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}

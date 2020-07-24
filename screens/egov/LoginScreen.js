@@ -83,25 +83,28 @@ export default class LoginScreen extends React.Component {
     }
 
     login = async () => {
-        if (this.state.username === "" || this.state.password === "") {
+        const {password, _0x6100, username, isRemember} = this.state;
+
+        if (username === "" || password === "") {
             Alert.alert("Mời bạn nhập username và password.");
         } else {
             this.setState({isLoading: true});
 
             let pK = await axios
-                .get(Config.API_URL + `/api/salt/${this.state.username}`)
+                .get(Config.API_URL + `/api/salt/${username}`)
                 .then((res) => {
                     return res.data;
                 });
-            let password = PasswordEncode(pK, this.state.username);
+
+            let encodePassword = PasswordEncode(pK, password, _0x6100);
 
             axios
                 .post(Config.API_URL + `/api/login`, {
-                    username: this.state.username,
-                    password: password
+                    username: username,
+                    password: encodePassword
                 })
                 .then(async (res) => {
-                    if (this.state.isRemember) {
+                    if (isRemember) {
                         await AsyncStorage.setItem(EGOV_TOKEN, res.data);
                     } else {
                         await AsyncStorage.removeItem(EGOV_TOKEN);

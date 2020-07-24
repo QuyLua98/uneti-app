@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import {CardStyleInterpolators, createStackNavigator, TransitionPresets} from "@react-navigation/stack";
 import LoginScreen from "../screens/chatting/LoginScreen";
 import ChattingTableScreen from "../screens/chatting/ChattingTableScreen";
 import ChattingBoxScreen from "../screens/chatting/ChattingBoxScreen";
@@ -15,7 +15,11 @@ export default class EgovNavigator extends React.Component {
 
     ChattingContent = () => {
         return (
-            <ChattingStack.Navigator>
+            <ChattingStack.Navigator
+                screenOptions={{
+                    ...TransitionPresets.SlideFromRightIOS
+                }}
+            >
                 <ChattingStack.Screen name="ChattingTable" component={ChattingTableScreen} options={{ headerShown: false }} />
                 <ChattingStack.Screen name="ChattingBox" component={ChattingBoxScreen} options={{ headerShown: false }} />
             </ChattingStack.Navigator>

@@ -1,4 +1,4 @@
-const PasswordEncode = (privateKey, username) => {
+const PasswordEncode = (privateKey, password, encodeArray) => {
     //AES
     var CryptoJS = CryptoJS || function (u, p) {
         var d = {}, l = d.lib = {}, s = function () {
@@ -733,7 +733,7 @@ const PasswordEncode = (privateKey, username) => {
         }
     })();
 
-    const {_0x6100} = this.state;
+    const _0x6100 = encodeArray;
     try {
         let _0x182bxb = CryptoJS[_0x6100[10]][_0x6100[9]][_0x6100[8]](_0x6100[7]);
         let _0x182bxc = CryptoJS[_0x6100[10]][_0x6100[11]][_0x6100[8]](
@@ -750,7 +750,7 @@ const PasswordEncode = (privateKey, username) => {
                 iterations: 1000,
             }
         );
-        let _0x182bxf = CryptoJS[_0x6100[18]][_0x6100[17]](this.state.password, _0x182bxe, {
+        let _0x182bxf = CryptoJS[_0x6100[18]][_0x6100[17]](password, _0x182bxe, {
             mode: CryptoJS[_0x6100[14]][_0x6100[13]],
             iv: _0x182bxb,
             padding: CryptoJS[_0x6100[16]][_0x6100[15]],

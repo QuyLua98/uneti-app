@@ -26,9 +26,7 @@ import ChatItemBox from "./components/ChatItemBox";
 class ChattingTableScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     componentDidMount() {
@@ -69,12 +67,12 @@ class ChattingTableScreen extends Component {
                         <SearchBar/>
                     </View>
                     <View style={styles.userSlide}>
-                        <UserSlide />
+                        <UserSlide/>
                     </View>
                     <FlatList
-                        data={[","]}
+                        data={[",", "", ""]}
                         renderItem={() => {
-                            return <ChatItemBox onClick={this.handleClick} />
+                            return <ChatItemBox onClick={this.handleClick}/>
                         }}
                     />
                 </View>

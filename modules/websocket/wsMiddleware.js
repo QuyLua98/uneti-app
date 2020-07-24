@@ -6,6 +6,8 @@ import {ENDPOINT_BROKER, JWT_TOKEN} from "../../constants/Constants";
 import {Config} from "../../config";
 import {AsyncStorage} from "react-native";
 import {_retrieveAsyncStorageData} from "../../components/AsyncStorageUtils";
+import MessageStatus from "../../screens/chatting/components/MessageStatus";
+import MessageType from "../../screens/chatting/components/MessageType";
 
 
 let stompClient = null;
@@ -70,10 +72,19 @@ export const wsMiddleware = store => next => action => {
             break;
 
         case types.SOCKETS_MESSAGE_SEND:
-            stompClient.publish({
-                destination: action.payload.api,
-                body: JSON.stringify(action.payload.data)
-            });
+            const messageEntity = {
+                status: MessageStatus.PENDING,
+                type: MessageType.TEXT,
+                content: action.payload.data[0].text,
+                sender: "",
+                sendToUser: action.payload.data[0].user._id,
+                createdDate: action.payload.data[0].createdAt
+            }
+
+            // stompClient.publish({
+            //     destination: action.payload.api,
+            //     body: JSON.stringify(messageEntity)
+            // });
             store.dispatch(chattingAction.socketsMessageSending(action.payload.data));
             break;
         case types.SOCKETS_MESSAGE_SUBSCRIBE:

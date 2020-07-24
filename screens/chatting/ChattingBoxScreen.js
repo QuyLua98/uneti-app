@@ -20,21 +20,21 @@ import {
     List,
     Title,
     ListItem,
-    Thumbnail
+    Thumbnail,
+    Text
 } from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
-import {GiftedChat} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Send} from 'react-native-gifted-chat';
 import {socketsMessageSend} from "../../store/chat/action";
 import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
-import MessageStatus from "./components/MessageStatus";
-import MessageType from "./components/MessageType";
 import Colors from "../../constants/Colors";
 
-class ChattingBox extends Component {
+class ChattingBoxScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userId: null,
+            messages: [],
         }
     }
 
@@ -44,19 +44,14 @@ class ChattingBox extends Component {
     }
 
     onSend = (messages) => {
-        const messageEntity = {
-            status: MessageStatus.SENT,
-            type: MessageType.TEXT,
-            content: messages[0].text,
-            sender: "",
-            sendToUser: messages[0].user._id,
-            createdDate: messages[0].createdAt
-        }
-        this.props.socketsMessageSend(messageEntity, ENDPOINT_SEND_MESSAGE, null);
+        const newMessage = [...messages, ...this.state.messages];
+        this.setState({messages: newMessage});
+        // this.props.socketsMessageSend(newMessage, ENDPOINT_SEND_MESSAGE, null);
     }
 
     render() {
-        const {userId} = this.state;
+        const {userId, messages} = this.state;
+        const {navigation} = this.props;
         return (
             <Container>
                 <Header>
@@ -64,7 +59,7 @@ class ChattingBox extends Component {
                         <Button
                             transparent
                             onPress={() => {
-                                this.props.navigation.goBack();
+                                navigation.goBack();
                             }}
                         >
                             <Icon name="arrow-back"/>
@@ -78,15 +73,33 @@ class ChattingBox extends Component {
                     </Right>
                 </Header>
                 <GiftedChat
-                    messages={this.props.chatting.messages}
+                    placeholder={"Aa"}
+                    alwaysShowSend={true}
+                    isAnimated
+                    messages={messages}
                     onSend={messages => this.onSend(messages)}
                     user={{
-                        _id: 1,
+                        _id: userId,
+                    }}
+                    // renderActions={() => (
+                    //     <Text>asdasd</Text>
+                    // )}
+                    renderSend={(props) => {
+                        return <Send
+                            {...props}
+                            containerStyle={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center',
+                                marginRight: 15,
+                                marginLeft: 15,
+                            }}
+                        >
+                            <Icon name="send" style={{color: Colors.tintColor}}/>
+                        </Send>
                     }}
                 />
-                {/*{*/}
-                {/*    Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />*/}
-                {/*}*/}
+                <KeyboardAvoidingView/>
             </Container>
         );
     };
@@ -96,6 +109,6 @@ const mapStateToProps = state => ({
     chatting: state.chatting
 });
 const mapDispatchToProps = {socketsMessageSend};
-export default connect(mapStateToProps, mapDispatchToProps)(ChattingBox);
+export default connect(mapStateToProps, mapDispatchToProps)(ChattingBoxScreen);
 
 const styles = StyleSheet.create({})

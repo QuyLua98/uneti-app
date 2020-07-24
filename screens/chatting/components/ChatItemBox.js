@@ -2,6 +2,7 @@ import {Body, Left, ListItem, Right, Thumbnail} from "native-base";
 import {Text} from "react-native";
 import React, {Component} from "react";
 import AvatarIcon from "./AvatarIcon";
+import Colors from "../../../constants/Colors";
 
 export default class ChatItemBox extends Component {
     constructor(props) {
@@ -25,11 +26,11 @@ export default class ChatItemBox extends Component {
                     {/*<Thumbnail source={require('../../../assets/images/chatting/avatar/avatar-quy.jpg')}/>*/}
                     <AvatarIcon isActive={true} />
                 </Left>
-                <Body>
+                <Body style={{borderColor: Colors.white}}>
                     <Text style={{fontWeight: 'bold', fontSize: 17}}>Nguyễn Duy Quý</Text>
                     <Text note>Bạn: Cô chào em</Text>
                 </Body>
-                <Right>
+                <Right style={{borderColor: Colors.white, marginTop: 10}}>
                     <Text note>3:43 pm</Text>
                 </Right>
             </ListItem>

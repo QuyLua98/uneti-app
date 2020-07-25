@@ -3,6 +3,7 @@ import * as types from "./types";
 const defaultState = {
     signedIn: null,
     username: "",
+    avatar: "",
     token: "",
     error: "",
     authFailure: false
@@ -14,6 +15,7 @@ export default (state = defaultState, action) => {
             return {
                 signedIn: true,
                 username: action.payload.username,
+                avatar: action.payload.avatar,
                 token: action.payload.token,
                 error: "",
                 authFailure: false
@@ -22,6 +24,7 @@ export default (state = defaultState, action) => {
             return {
                 signedIn: false,
                 username: "",
+                avatar: "",
                 token: "",
                 error: action.payload.error,
                 authFailure: true
@@ -30,6 +33,7 @@ export default (state = defaultState, action) => {
             return {
                 signedIn: false,
                 username: "",
+                avatar: "",
                 token: "",
                 error: "",
                 authFailure: false

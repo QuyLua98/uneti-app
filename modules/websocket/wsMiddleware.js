@@ -32,37 +32,34 @@ export const wsMiddleware = store => next => action => {
         store.dispatch(chattingAction.socketsMessageReceiving(message.body));
     };
 
-
     switch (action.type) {
         case types.SOCKETS_CONNECT:
-            // if (stompClient !== null) {
-            //     store.dispatch(chattingAction.socketsDisconnecting());
-            //     stompClient.deactivate();
-            //     store.dispatch(chattingAction.socketsDisconnected());
-            // }
-            // store.dispatch(chattingAction.socketsConnecting);
-            //
-            // // const token =  _retrieveAsyncStorageData(JWT_TOKEN);
-            // const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJpZFwiOjEsXCJ1c2VybmFtZVwiOlwicXV5bHVhXCJ9IiwiaWF0IjoxNTk0NDU1NjI0LCJleHAiOjE1OTUzMTk2MjR9.0trseE_5ME6KMbTin2uaTDqqhu6ENDC_skSCfaOsaoU";
-            // const wsURL = `${Config.API_URL}/ws?${JWT_TOKEN}=${token}`;
-            // stompClient = new Client();
-            //
-            // stompClient.webSocketFactory = function () {
-            //     return new SockJS(wsURL);
-            // };
-            //
-            // stompClient.configure({
-            //     onConnect: () => {
-            //         store.dispatch(chattingAction.socketsConnected());
-            //         stompClient.subscribe(ENDPOINT_BROKER, onSubscribeMessage);
-            //     },
-            //     debug: (str) => {
-            //         console.log(new Date(), str);
-            //     }
-            // });
-            // stompClient.activate();
-            break;
+            if (stompClient !== null) {
+                store.dispatch(chattingAction.socketsDisconnecting());
+                stompClient.deactivate();
+                store.dispatch(chattingAction.socketsDisconnected());
+            }
+            store.dispatch(chattingAction.socketsConnecting);
 
+            // const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJpZFwiOjEsXCJ1c2VybmFtZVwiOlwicXV5bHVhXCJ9IiwiaWF0IjoxNTk0NDU1NjI0LCJleHAiOjE1OTUzMTk2MjR9.0trseE_5ME6KMbTin2uaTDqqhu6ENDC_skSCfaOsaoU";
+            const wsURL = `${Config.API_URL}/ws?${JWT_TOKEN}=${action.payload.token}`;
+            stompClient = new Client();
+
+            stompClient.webSocketFactory = function () {
+                return new SockJS(wsURL);
+            };
+
+            stompClient.configure({
+                onConnect: () => {
+                    store.dispatch(chattingAction.socketsConnected());
+                    stompClient.subscribe(ENDPOINT_BROKER, onSubscribeMessage);
+                },
+                debug: (str) => {
+                    console.log(new Date(), str);
+                }
+            });
+            stompClient.activate();
+            break;
         case types.SOCKETS_DISCONNECT:
             if (stompClient !== null) {
                 stompClient.forceDisconnect();
@@ -70,21 +67,20 @@ export const wsMiddleware = store => next => action => {
             stompClient = null;
             store.dispatch(chattingAction.socketsDisconnected());
             break;
-
         case types.SOCKETS_MESSAGE_SEND:
             const messageEntity = {
                 status: MessageStatus.PENDING,
                 type: MessageType.TEXT,
                 content: action.payload.data[0].text,
                 sender: "",
-                sendToUser: action.payload.data[0].user._id,
+                sendTo: action.payload.data[0].user._id,
                 createdDate: action.payload.data[0].createdAt
             }
-
-            // stompClient.publish({
-            //     destination: action.payload.api,
-            //     body: JSON.stringify(messageEntity)
-            // });
+            console.log(action.payload)
+            stompClient.publish({
+                destination: action.payload.api,
+                body: JSON.stringify(messageEntity)
+            });
             store.dispatch(chattingAction.socketsMessageSending(action.payload.data));
             break;
         case types.SOCKETS_MESSAGE_SUBSCRIBE:

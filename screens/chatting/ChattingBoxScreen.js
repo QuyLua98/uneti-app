@@ -46,7 +46,7 @@ class ChattingBoxScreen extends Component {
     onSend = (messages) => {
         const newMessage = [...messages, ...this.state.messages];
         this.setState({messages: newMessage});
-        // this.props.socketsMessageSend(newMessage, ENDPOINT_SEND_MESSAGE, null);
+        this.props.socketsMessageSend(messages, ENDPOINT_SEND_MESSAGE, null);
     }
 
     render() {

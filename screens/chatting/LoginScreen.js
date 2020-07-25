@@ -16,13 +16,19 @@ import {
 } from "react-native";
 import {Container, Body, Button, Header, Icon, Left, Right, Spinner, Title} from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
+import {connect} from 'react-redux';
+import {login} from "../../store/auth/action";
+import Loader from "./components/Loader";
+import {_retrieveAsyncStorageData, _storeAsyncStorageData} from "../../components/AsyncStorageUtils";
+import {JWT_TOKEN, PASSWORD, USERNAME} from "../../constants/Constants";
 
-export default class LoginScreen extends Component {
+
+class LoginScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: "",
-            password: "",
+            username: "quylua",
+            password: "cXV5bHVhOTg",
             isRemember: false,
             isLoading: false,
             isLoadingToken: false,
@@ -30,15 +36,38 @@ export default class LoginScreen extends Component {
     }
 
     componentDidMount() {
-        this.props.navigation.navigate("ChattingContent", {
-            screen: "ChattingTable",
-        });
+        // const token = _retrieveAsyncStorageData(JWT_TOKEN);
+        const token = null;
+        if(token !== null) {
+            this.props.navigation.navigate("ChattingContent", {
+                screen: "ChattingTable",
+            });
+        }
+    }
+
+    login = async () => {
+        const {username, password, isRemember} = this.state;
+        if(username === "" || password === "") {
+            Alert.alert("Waning", "Tài khoản hoặc mật khẩu không được bỏ trống")
+        }else {
+            this.setState({isLoading: true})
+            await this.props.login(username, password, isRemember);
+            const token = await _retrieveAsyncStorageData(JWT_TOKEN);
+            if(token !== null) {
+                this.props.navigation.navigate("ChattingContent", {
+                    screen: "ChattingTable",
+                });
+            }
+            this.setState({isLoading: false})
+        }
     }
 
     render() {
+        const {isRemember, isLoading} = this.state;
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <Container>
+                    <Loader loading={isLoading} />
                     <Header>
                         <Left>
                             <Button
@@ -82,9 +111,9 @@ export default class LoginScreen extends Component {
                             </View>
                             <View style={styles.checkBoxContainer}>
                                 <CheckBox
-                                    value={this.state.isRemember}
+                                    value={isRemember}
                                     onValueChange={() =>
-                                        this.setState({isRemember: !this.state.isRemember})
+                                        this.setState({isRemember: !isRemember})
                                     }
                                     style={styles.checkbox}
                                 />
@@ -94,10 +123,9 @@ export default class LoginScreen extends Component {
                                 <Text style={styles.loginButtonTitle}>ĐĂNG NHẬP</Text>
                             </TouchableOpacity>
                             <Text style={[styles.loginButtonTitle, {color: "#000", marginTop: 20}]}>Hoặc</Text>
-                            <TouchableOpacity style={styles.loginButton} onPress={this.login}>
+                            <TouchableOpacity style={styles.loginButton}>
                                 <Text style={styles.loginButtonTitle}>ĐĂNG KÍ</Text>
                             </TouchableOpacity>
-                            {this.state.isLoading ? <Spinner color='red'/> : <></>}
                         </View>
                         <View style={styles.footer}/>
                     </View>
@@ -106,3 +134,9 @@ export default class LoginScreen extends Component {
         );
     };
 };
+
+const mapStateToProps = state => ({
+    user: state.auth
+});
+const mapDispatchToProps = {login};
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

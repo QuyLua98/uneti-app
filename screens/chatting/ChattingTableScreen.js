@@ -3,6 +3,7 @@ import React, {Component} from "react";
 import {
     StyleSheet,
     FlatList,
+    Alert
 } from "react-native";
 import {
     Container,
@@ -14,36 +15,62 @@ import {
     Left,
     Right,
     Title,
+    Thumbnail
 } from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
 import {socketsConnect, socketsSubscribe} from "../../store/chat/action";
 import {connect} from 'react-redux';
-import {ENDPOINT_BROKER} from '../../constants/Constants';
+import {CODE_SEARCH, ENDPOINT_BROKER, JWT_TOKEN} from '../../constants/Constants';
 import SearchBar from "./components/SearchBar";
 import UserSlide from "./components/UserSlide";
 import ChatItemBox from "./components/ChatItemBox";
+import axios from "axios";
+import {Config} from "../../config";
+import {_retrieveAsyncStorageData} from "../../components/AsyncStorageUtils";
 
 class ChattingTableScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            conversation: []
+        }
     }
 
-    componentDidMount() {
-        // this.props.socketsConnect();
-        // this.props.socketsSubscribe(ENDPOINT_BROKER);
-        console.log(this.props.chatting);
+    async componentDidMount() {
+        this.getConversation().then(() => console.log("Get list conversation"));
+        const token = await _retrieveAsyncStorageData(JWT_TOKEN);
+        await this.props.socketsConnect(token);
+        this.props.socketsSubscribe(ENDPOINT_BROKER);
 
     }
 
-    handleClick = () => {
-        // this.props.navigation.navigate('ChattingBox');
+    async getConversation() {
+        const token = await _retrieveAsyncStorageData(JWT_TOKEN);
+        const headers = {
+            [JWT_TOKEN]: token,
+        };
+        axios
+            .get(Config.API_URL + `/api/message/conversation/`, { headers })
+            .then((res) => {
+                this.setState({ conversation: res.data });
+                this.setState({ isLoading: false });
+            })
+            .catch((err) => {
+                console.log(err)
+                Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
+                this.setState({ isLoading: false });
+            });
+    }
+
+    handleClick = (userId) => {
         this.props.navigation.navigate("ChattingBox", {
-            userId: "ltthieu",
+            userId: userId,
         });
     }
 
     render() {
+        const {conversation} = this.state;
+        const {auth} = this.props;
         return (
             <Container>
                 <Header>
@@ -60,7 +87,10 @@ class ChattingTableScreen extends Component {
                     <Body>
                         <Title>Chat</Title>
                     </Body>
-                    <Right/>
+                    <Right>
+                        {/*<Thumbnail small source={{uri: auth.avatar}} />*/}
+                        <Thumbnail small source={require("../../assets/images/chatting/avatar/avatar-quy.jpg")} />
+                    </Right>
                 </Header>
                 <View contentContainerStyle={{flex: 1}}>
                     <View>
@@ -70,9 +100,9 @@ class ChattingTableScreen extends Component {
                         <UserSlide onClick={this.handleClick} />
                     </View>
                     <FlatList
-                        data={[",", "", ""]}
-                        renderItem={() => {
-                            return <ChatItemBox onClick={this.handleClick}/>
+                        data={conversation}
+                        renderItem={(item) => {
+                            return <ChatItemBox userId={item.id} keyExtractor={item.code} onClick={this.handleClick}/>
                         }}
                     />
                 </View>
@@ -82,7 +112,8 @@ class ChattingTableScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-    chatting: state.chatting
+    chatting: state.chatting,
+    auth: state.auth
 });
 const mapDispatchToProps = {socketsSubscribe, socketsConnect};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);

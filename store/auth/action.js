@@ -6,6 +6,7 @@ import {
 } from "../../components/AsyncStorageUtils";
 import {JWT_PREFIX, JWT_TOKEN} from "../../constants/Constants";
 import {Config} from "../../config";
+import {Alert} from "react-native";
 
 export const loggedIn = (data) => {
     return {
@@ -26,23 +27,27 @@ export const loggedOut = () => {
 };
 
 
-export function login(username, password) {
-    return dispatch => {
+export function login(username, password, isRemember) {
+    return async dispatch => {
         const credentials = {username, password};
-        axios
+        await axios
             .post(`${Config.API_URL}/api/login`, credentials)
             .then(success => {
                 const token = success.data;
-                _storeAsyncStorageData(JWT_TOKEN, token).then(() => console.log("Saved token to storage"));
-                this.getUserProfile(token);
-            })
-            .catch(error => {
+                if (isRemember) {
+                    console.log(token)
+                    _storeAsyncStorageData(JWT_TOKEN, token).then(() => console.log("Saved token to storage"));
+                }
+                dispatch(getUserProfile(token));
+            }).catch(error => {
+                Alert.alert("Lỗi", "Sai tên tài khoản hoặc mật khẩu.");
                 dispatch(
                     loginError({
                         signedIn: false,
                         username: "",
+                        avatar: "",
                         token: "",
-                        error: error.response.data,
+                        error: error,
                         authFailure: true
                     })
                 );
@@ -58,17 +63,18 @@ export const logout = () => {
 };
 
 export const getUserProfile = (token) => {
-    return dispatch => {
+    return async dispatch => {
         let headers = {
-            [JWT_TOKEN]: `${JWT_PREFIX + " " + token}`
+            [JWT_TOKEN]: `Bearer ${token}`
         };
-        axios
+        await axios
             .get(`${Config.API_URL}/api/user/profile`, {headers})
             .then(res => {
                 dispatch(
                     loggedIn({
                         signedIn: true,
                         username: res.data.fullName,
+                        avatar: res.data.avatar,
                         token: token,
                         error: "",
                         authFailure: false

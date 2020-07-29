@@ -4,10 +4,9 @@ import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {ENDPOINT_BROKER, JWT_TOKEN} from "../../constants/Constants";
 import {Config} from "../../config";
-import {AsyncStorage} from "react-native";
-import {_retrieveAsyncStorageData} from "../../components/AsyncStorageUtils";
 import MessageStatus from "../../screens/chatting/components/MessageStatus";
 import MessageType from "../../screens/chatting/components/MessageType";
+import {messageToEntity} from "../../components/module/chatting/ConvertMessage";
 
 
 let stompClient = null;
@@ -34,6 +33,7 @@ export const wsMiddleware = store => next => action => {
 
     switch (action.type) {
         case types.SOCKETS_CONNECT:
+            console.log("connecting")
             if (stompClient !== null) {
                 store.dispatch(chattingAction.socketsDisconnecting());
                 stompClient.deactivate();
@@ -68,14 +68,8 @@ export const wsMiddleware = store => next => action => {
             store.dispatch(chattingAction.socketsDisconnected());
             break;
         case types.SOCKETS_MESSAGE_SEND:
-            const messageEntity = {
-                status: MessageStatus.PENDING,
-                type: MessageType.TEXT,
-                content: action.payload.data[0].text,
-                sender: "",
-                sendTo: action.payload.data[0].user._id,
-                createdDate: action.payload.data[0].createdAt
-            }
+            let messageEntity = messageToEntity(action.payload.data[0]);
+            messageEntity.sendTo = action.payload.sendTo;
             console.log(action.payload)
             stompClient.publish({
                 destination: action.payload.api,

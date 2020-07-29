@@ -64,7 +64,6 @@ export default class EgovScreen extends Component {
         axios
             .get(Config.API_URL + `/api/egov/xem-luong`, {headers})
             .then((res) => {
-                console.log(res.data);
                 this.setState({luong: res.data});
                 this.setState({isLoading: false});
             })

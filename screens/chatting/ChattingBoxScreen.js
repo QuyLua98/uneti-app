@@ -23,35 +23,42 @@ import {
     Thumbnail,
     Text
 } from 'native-base';
-import {DrawerActions} from "@react-navigation/native";
 import {GiftedChat, Actions, Send} from 'react-native-gifted-chat';
 import {socketsMessageSend} from "../../store/chat/action";
 import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
 import Colors from "../../constants/Colors";
+import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
+import {getURIAvatarFromUserId} from "./components/Utils";
 
 class ChattingBoxScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userId: null,
+            user: null,
             messages: [],
         }
     }
 
     componentDidMount() {
-        const {userId} = this.props.route.params;
-        this.setState({userId: userId});
+        const {user, messageCache} = this.props.route.params;
+        if (messageCache !== undefined) {
+            const messages = messageCache.map(m => entityToMessage(m));
+            this.setState({messages: messages});
+        }
+        this.setState({user: user});
     }
 
     onSend = (messages) => {
         const newMessage = [...messages, ...this.state.messages];
         this.setState({messages: newMessage});
-        this.props.socketsMessageSend(messages, ENDPOINT_SEND_MESSAGE, null);
+        this.props.socketsMessageSend(messages, this.state.user, ENDPOINT_SEND_MESSAGE);
     }
 
     render() {
-        const {userId, messages} = this.state;
+        const {messages} = this.state;
         const {navigation} = this.props;
+        const {userId} = this.props.auth;
+        console.log(userId)
         return (
             <Container>
                 <Header>
@@ -80,6 +87,7 @@ class ChattingBoxScreen extends Component {
                     onSend={messages => this.onSend(messages)}
                     user={{
                         _id: userId,
+                        avatar: getURIAvatarFromUserId(userId)
                     }}
                     // renderActions={() => (
                     //     <Text>asdasd</Text>
@@ -106,7 +114,8 @@ class ChattingBoxScreen extends Component {
 };
 
 const mapStateToProps = state => ({
-    chatting: state.chatting
+    chatting: state.chatting,
+    auth: state.auth
 });
 const mapDispatchToProps = {socketsMessageSend};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingBoxScreen);

@@ -3,20 +3,17 @@ import {StyleSheet} from "react-native";
 import {Thumbnail, View} from "native-base";
 import Colors from "../../../constants/Colors";
 import {Config} from "../../../config";
+import {getURIAvatarFromUserId} from "./Utils";
 
 export default class AvatarIcon extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    getURIAvatarFromUserId = (userId) => {
-        return `${Config.API_URL}/api/user/${userId}/avatar`;
-    }
 
     render() {
         const {userId} = this.props;
-        const avatar = this.getURIAvatarFromUserId(userId);
-        console.log(userId)
+        const avatar = getURIAvatarFromUserId(userId);
         return (
             <View style={styles.container}>
                 <Thumbnail

@@ -35,7 +35,6 @@ export function login(username, password, isRemember) {
             .then(success => {
                 const token = success.data;
                 if (isRemember) {
-                    console.log(token)
                     _storeAsyncStorageData(JWT_TOKEN, token).then(() => console.log("Saved token to storage"));
                 }
                 dispatch(getUserProfile(token));
@@ -45,7 +44,7 @@ export function login(username, password, isRemember) {
                     loginError({
                         signedIn: false,
                         username: "",
-                        avatar: "",
+                        userId: "",
                         token: "",
                         error: error,
                         authFailure: true
@@ -74,7 +73,7 @@ export const getUserProfile = (token) => {
                     loggedIn({
                         signedIn: true,
                         username: res.data.fullName,
-                        avatar: res.data.avatar,
+                        userId: res.data.id,
                         token: token,
                         error: "",
                         authFailure: false
@@ -83,7 +82,6 @@ export const getUserProfile = (token) => {
             })
             .catch(error => {
                 if (error.response) {
-                    console.log("catch validate " + error);
                     dispatch(loggedOut());
                 }
             });

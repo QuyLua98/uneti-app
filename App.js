@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Platform, StatusBar, StyleSheet} from 'react-native';
 import {SplashScreen} from 'expo';
 import * as Font from 'expo-font';
+import * as encoding from 'text-encoding';
 import {Ionicons} from '@expo/vector-icons';
 import {NavigationContainer} from '@react-navigation/native';
 import LeftDrawerNavigator from './navigation/LeftDrawerNavigator';

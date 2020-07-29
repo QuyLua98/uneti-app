@@ -27,6 +27,8 @@ import ChatItemBox from "./components/ChatItemBox";
 import axios from "axios";
 import {Config} from "../../config";
 import {_retrieveAsyncStorageData} from "../../components/AsyncStorageUtils";
+import {getURIAvatarFromUserId} from "./components/Utils";
+import {fetchUsers} from "../../store/user/action";
 
 class ChattingTableScreen extends Component {
     constructor(props) {
@@ -37,40 +39,41 @@ class ChattingTableScreen extends Component {
     }
 
     async componentDidMount() {
-        this.getConversation().then(() => console.log("Get list conversation"));
-        const token = await _retrieveAsyncStorageData(JWT_TOKEN);
+        const token = this.props.auth.token;
+        this.getConversation(token);
+        this.props.fetchUsers(token);
         await this.props.socketsConnect(token);
         this.props.socketsSubscribe(ENDPOINT_BROKER);
 
     }
 
-    async getConversation() {
-        const token = await _retrieveAsyncStorageData(JWT_TOKEN);
+    getConversation(token) {
         const headers = {
-            [JWT_TOKEN]: token,
+            [JWT_TOKEN]: `Bearer ${token}`,
         };
         axios
-            .get(Config.API_URL + `/api/message/conversation/`, { headers })
+            .get(Config.API_URL + `/api/user/conversation`, { headers })
             .then((res) => {
                 this.setState({ conversation: res.data });
                 this.setState({ isLoading: false });
             })
             .catch((err) => {
-                console.log(err)
+                console.log("Fail to get conversation: " + err)
                 Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
                 this.setState({ isLoading: false });
             });
     }
 
-    handleClick = (userId) => {
+    handleClick = (user, messageCache) => {
         this.props.navigation.navigate("ChattingBox", {
-            userId: userId,
+            user: user,
+            messageCache: messageCache,
         });
     }
 
     render() {
         const {conversation} = this.state;
-        const {auth} = this.props;
+        const uriAvatar = getURIAvatarFromUserId(this.props.auth.userId);
         return (
             <Container>
                 <Header>
@@ -88,8 +91,7 @@ class ChattingTableScreen extends Component {
                         <Title>Chat</Title>
                     </Body>
                     <Right>
-                        {/*<Thumbnail small source={{uri: auth.avatar}} />*/}
-                        <Thumbnail small source={require("../../assets/images/chatting/avatar/avatar-quy.jpg")} />
+                        <Thumbnail small source={{uri: uriAvatar}} />
                     </Right>
                 </Header>
                 <View contentContainerStyle={{flex: 1}}>
@@ -101,8 +103,14 @@ class ChattingTableScreen extends Component {
                     </View>
                     <FlatList
                         data={conversation}
-                        renderItem={(item) => {
-                            return <ChatItemBox userId={item.id} keyExtractor={item.code} onClick={this.handleClick}/>
+                        renderItem={(data) => {
+                            return <ChatItemBox
+                                user={data.item.userInCon[0]}
+                                keyExtractor={data.item.code}
+                                onClick={this.handleClick}
+                                lastMessage={data.item.messageCache[0]}
+                                messageCache={data.item.messageCache}
+                            />
                         }}
                     />
                 </View>
@@ -115,7 +123,7 @@ const mapStateToProps = state => ({
     chatting: state.chatting,
     auth: state.auth
 });
-const mapDispatchToProps = {socketsSubscribe, socketsConnect};
+const mapDispatchToProps = {socketsSubscribe, socketsConnect, fetchUsers};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
 
 const styles = StyleSheet.create({

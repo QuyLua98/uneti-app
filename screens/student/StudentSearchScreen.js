@@ -58,7 +58,6 @@ export default class StudentSearchScreen extends Component {
                     })
                     .catch((error) => {
                         Alert.alert("Lỗi", "Không thể kết nối đến server.\nXin thử lại sau!");
-                        console.log(error);
                         this.setState({isLoading: false});
                     });
             } else {
@@ -73,7 +72,6 @@ export default class StudentSearchScreen extends Component {
             }
         } catch (error) {
             Alert.alert("Lỗi","Không thể kết nối đến server.\nXin thử lại sau!");
-            console.log(error);
             this.setState({isLoading: false});
         }
     }

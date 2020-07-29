@@ -109,7 +109,6 @@ export default class LoginScreen extends React.Component {
                     } else {
                         await AsyncStorage.removeItem(EGOV_TOKEN);
                     }
-                    console.log(res.data);
                     this.props.navigation.navigate("EgovDetail", {
                         screen: "EgovHome",
                         params: {

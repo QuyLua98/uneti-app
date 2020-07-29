@@ -17,7 +17,7 @@ import {
 import {Container, Body, Button, Header, Icon, Left, Right, Spinner, Title} from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
 import {connect} from 'react-redux';
-import {login} from "../../store/auth/action";
+import {getUserProfile, login} from "../../store/auth/action";
 import Loader from "./components/Loader";
 import {_retrieveAsyncStorageData, _storeAsyncStorageData} from "../../components/AsyncStorageUtils";
 import {JWT_TOKEN, PASSWORD, USERNAME} from "../../constants/Constants";
@@ -35,9 +35,9 @@ class LoginScreen extends Component {
         }
     }
 
-    componentDidMount() {
-        // const token = _retrieveAsyncStorageData(JWT_TOKEN);
-        const token = null;
+    async componentDidMount() {
+        const token = await _retrieveAsyncStorageData(JWT_TOKEN);
+        await this.props.getUserProfile(token);
         if(token !== null) {
             this.props.navigation.navigate("ChattingContent", {
                 screen: "ChattingTable",
@@ -52,8 +52,8 @@ class LoginScreen extends Component {
         }else {
             this.setState({isLoading: true})
             await this.props.login(username, password, isRemember);
-            const token = await _retrieveAsyncStorageData(JWT_TOKEN);
-            if(token !== null) {
+            const token = this.props.auth.token;
+            if(token !== null || token !== "") {
                 this.props.navigation.navigate("ChattingContent", {
                     screen: "ChattingTable",
                 });
@@ -136,7 +136,7 @@ class LoginScreen extends Component {
 };
 
 const mapStateToProps = state => ({
-    user: state.auth
+    auth: state.auth
 });
-const mapDispatchToProps = {login};
+const mapDispatchToProps = {login, getUserProfile};
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

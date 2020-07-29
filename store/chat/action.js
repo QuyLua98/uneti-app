@@ -34,13 +34,13 @@ export const socketsMessageReceiving = receiveMessage => {
     };
 };
 
-export const socketsMessageSend = (data, api, subscribe) => {
+export const socketsMessageSend = (data, sendTo, api) => {
     return {
         type: types.SOCKETS_MESSAGE_SEND,
         payload: {
+            data,
+            sendTo,
             api,
-            subscribe,
-            data
         }
     };
 };

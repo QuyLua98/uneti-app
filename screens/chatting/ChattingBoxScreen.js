@@ -27,7 +27,7 @@ import {GiftedChat, Actions, Send} from 'react-native-gifted-chat';
 import {socketsMessageSend} from "../../store/chat/action";
 import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
 import Colors from "../../constants/Colors";
-import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
+import {entityToMessage, messageToEntity} from "../../components/module/chatting/ConvertMessage";
 import {getURIAvatarFromUserId} from "./components/Utils";
 
 class ChattingBoxScreen extends Component {
@@ -36,22 +36,31 @@ class ChattingBoxScreen extends Component {
         this.state = {
             user: null,
             messages: [],
+            conId: null,
+            userIdReceive: null,
+            usernameReceive: null,
         }
     }
 
     componentDidMount() {
-        const {user, messageCache} = this.props.route.params;
+        const {userIdReceive, usernameReceive, messageCache, conId} = this.props.route.params;
         if (messageCache !== undefined) {
             const messages = messageCache.map(m => entityToMessage(m));
             this.setState({messages: messages});
         }
-        this.setState({user: user});
+        this.setState({
+            userIdReceive: userIdReceive,
+            usernameReceive: usernameReceive,
+            conId: conId
+        });
     }
 
     onSend = (messages) => {
+        const {userIdReceive, usernameReceive, conId} = this.state;
         const newMessage = [...messages, ...this.state.messages];
         this.setState({messages: newMessage});
-        this.props.socketsMessageSend(messages, this.state.user, ENDPOINT_SEND_MESSAGE);
+        const messageEntity = messageToEntity(messages[0], userIdReceive, usernameReceive, conId);
+        this.props.socketsMessageSend(messageEntity, ENDPOINT_SEND_MESSAGE);
     }
 
     render() {

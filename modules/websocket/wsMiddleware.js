@@ -41,10 +41,9 @@ export const wsMiddleware = store => next => action => {
             }
             store.dispatch(chattingAction.socketsConnecting);
 
-            // const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJpZFwiOjEsXCJ1c2VybmFtZVwiOlwicXV5bHVhXCJ9IiwiaWF0IjoxNTk0NDU1NjI0LCJleHAiOjE1OTUzMTk2MjR9.0trseE_5ME6KMbTin2uaTDqqhu6ENDC_skSCfaOsaoU";
             const wsURL = `${Config.API_URL}/ws?${JWT_TOKEN}=${action.payload.token}`;
             stompClient = new Client();
-
+            stompClient.reconnectDelay = 15000;
             stompClient.webSocketFactory = function () {
                 return new SockJS(wsURL);
             };
@@ -68,14 +67,13 @@ export const wsMiddleware = store => next => action => {
             store.dispatch(chattingAction.socketsDisconnected());
             break;
         case types.SOCKETS_MESSAGE_SEND:
-            let messageEntity = messageToEntity(action.payload.data[0]);
-            messageEntity.sendTo = action.payload.sendTo;
-            console.log(action.payload)
             stompClient.publish({
                 destination: action.payload.api,
-                body: JSON.stringify(messageEntity)
+                body: JSON.stringify(action.payload.data)
             });
-            store.dispatch(chattingAction.socketsMessageSending(action.payload.data));
+            console.log("sended=>>>>>>>>>>>>>>>")
+            console.log(action.payload.data)
+            // store.dispatch(chattingAction.socketsMessageSending(action.payload.data));
             break;
         case types.SOCKETS_MESSAGE_SUBSCRIBE:
             if (stompClient) {

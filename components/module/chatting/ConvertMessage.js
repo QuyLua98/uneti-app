@@ -3,13 +3,14 @@ import MessageType from "../../../screens/chatting/components/MessageType";
 import {getURIAvatarFromUserId} from "../../../screens/chatting/components/Utils";
 import moment from "moment";
 
-export const messageToEntity = (message) => {
+export const messageToEntity = (message, userId, username, conId) => {
     return {
         status: MessageStatus.PENDING,
         type: MessageType.TEXT,
         content: message.text,
-        sender: message.user._id,
-        sendTo: "",
+        sendToUserId: userId,
+        sendToUsername: username,
+        conId: conId,
         createdDate: message.createdAt
     }
 }

@@ -77,7 +77,7 @@ const DrawerContentComponent = ({navigation, self}) => {
                                         });
                                     }else {
                                         const token = await _retrieveAsyncStorageData(JWT_TOKEN);
-                                        // await self.getUserProfile(token);
+                                        await self.getUserProfile(token);
                                         if(token !== null) {
                                             navigation.navigate("ChattingLogin", {
                                                 screen: "ChattingContent",

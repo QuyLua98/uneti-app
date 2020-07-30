@@ -34,12 +34,11 @@ export const socketsMessageReceiving = receiveMessage => {
     };
 };
 
-export const socketsMessageSend = (data, sendTo, api) => {
+export const socketsMessageSend = (data, api) => {
     return {
         type: types.SOCKETS_MESSAGE_SEND,
         payload: {
             data,
-            sendTo,
             api,
         }
     };

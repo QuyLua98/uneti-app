@@ -41,13 +41,13 @@ class ChattingTableScreen extends Component {
     }
 
     async componentDidMount() {
-        this.state({isLoading: true})
+        this.setState({isLoading: true})
         const token = this.props.auth.token;
         this.getConversation(token);
         this.props.fetchUsers(token);
         await this.props.socketsConnect(token);
         this.props.socketsSubscribe(ENDPOINT_BROKER);
-        this.state({isLoading: false})
+        this.setState({isLoading: false})
     }
 
     getConversation(token) {
@@ -67,7 +67,7 @@ class ChattingTableScreen extends Component {
             });
     }
 
-    checkIsExistConversationOfTwoUser = (userId) => {
+    checkIsExistConversationOfTwoUser = async (userId) => {
         const {conversation} = this.state;
         let isExist = false;
         for(let con in conversation) {
@@ -83,7 +83,7 @@ class ChattingTableScreen extends Component {
         const headers = {
             [JWT_TOKEN]: `Bearer ${token}`,
         };
-        axios
+        return await axios
             .get(`${Config.API_URL}/api/conversation/check-user-exist-con?userId=${userId}`, { headers })
             .then((res) => {
                 return res.data;
@@ -98,14 +98,11 @@ class ChattingTableScreen extends Component {
         const {token} = this.props.auth;
         const headers = {
             [JWT_TOKEN]: `Bearer ${token}`,
+            'Content-Type': 'application/json',
         };
 
-        const data = {
-            userId: otherUserId
-        }
-
         axios
-            .post(`${Config.API_URL}/api/conversation/private/`, data,{ headers })
+            .post(`${Config.API_URL}/api/conversation/private/`, `${otherUserId}`,{ headers })
             .then((res) => {
                 return res.data;
             })
@@ -115,34 +112,43 @@ class ChattingTableScreen extends Component {
             });
     }
 
-    handleClickItemUserSlide = (userId, username) => {
-        const conId = this.checkIsExistConversationOfTwoUser(userId);
+    handleClickItemUserSlide = async (userId, username) => {
+        const conId = await this.checkIsExistConversationOfTwoUser(userId);
+        console.log("conId" + conId)
         if(conId) {
             const {conversation} = this.state;
             if(conversation.length === 0) {
                 this.props.navigation.navigate("ChattingBox", {
-                    user: username,
+                    userIdReceive: userId,
+                    usernameReceive: username,
+                    conId: conId,
                     messageCache: [],
                 });
             }else {
                 const messageCache = conversation.filter(c => c.id = conId);
                 this.props.navigation.navigate("ChattingBox", {
-                    user: username,
+                    userIdReceive: userId,
+                    usernameReceive: username,
+                    conId: conId,
                     messageCache: messageCache,
                 });
             }
         }else {
-            this.createConversation(userId);
+            await this.createConversation(userId);
             this.props.navigation.navigate("ChattingBox", {
-                user: username,
+                userIdReceive: userId,
+                usernameReceive: username,
+                conId: conId,
                 messageCache: [],
             });
         }
     }
 
-    handleClick = (user, messageCache) => {
+    handleClick = (userIdReceive, usernameReceive, conId, messageCache) => {
         this.props.navigation.navigate("ChattingBox", {
-            user: user,
+            userIdReceive: userIdReceive,
+            usernameReceive: usernameReceive,
+            conId: conId,
             messageCache: messageCache,
         });
     }
@@ -183,6 +189,7 @@ class ChattingTableScreen extends Component {
                         renderItem={(data) => {
                             return <ChatItemBox
                                 user={data.item.userInCon[0]}
+                                conId={data.item.id}
                                 keyExtractor={data.item.code}
                                 onClick={this.handleClick}
                                 lastMessage={data.item.messageCache[0]}

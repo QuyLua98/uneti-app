@@ -35,16 +35,6 @@ class LoginScreen extends Component {
         }
     }
 
-    async componentDidMount() {
-        const token = await _retrieveAsyncStorageData(JWT_TOKEN);
-        await this.props.getUserProfile(token);
-        if(token !== null) {
-            this.props.navigation.navigate("ChattingContent", {
-                screen: "ChattingTable",
-            });
-        }
-    }
-
     login = async () => {
         const {username, password, isRemember} = this.state;
         if(username === "" || password === "") {

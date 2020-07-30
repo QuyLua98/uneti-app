@@ -29,22 +29,25 @@ import {Config} from "../../config";
 import {_retrieveAsyncStorageData} from "../../components/AsyncStorageUtils";
 import {getURIAvatarFromUserId} from "./components/Utils";
 import {fetchUsers} from "../../store/user/action";
+import Loader from "./components/Loader";
 
 class ChattingTableScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: false,
             conversation: []
         }
     }
 
     async componentDidMount() {
+        this.state({isLoading: true})
         const token = this.props.auth.token;
         this.getConversation(token);
         this.props.fetchUsers(token);
         await this.props.socketsConnect(token);
         this.props.socketsSubscribe(ENDPOINT_BROKER);
-
+        this.state({isLoading: false})
     }
 
     getConversation(token) {
@@ -64,6 +67,79 @@ class ChattingTableScreen extends Component {
             });
     }
 
+    checkIsExistConversationOfTwoUser = (userId) => {
+        const {conversation} = this.state;
+        let isExist = false;
+        for(let con in conversation) {
+            if (conversation.hasOwnProperty(con)) {
+                isExist = con.userInCon.some(u => u.id = userId);
+                if(isExist) {
+                    return con.id;
+                }
+            }
+        }
+
+        const {token} = this.props.auth;
+        const headers = {
+            [JWT_TOKEN]: `Bearer ${token}`,
+        };
+        axios
+            .get(`${Config.API_URL}/api/conversation/check-user-exist-con?userId=${userId}`, { headers })
+            .then((res) => {
+                return res.data;
+            })
+            .catch((err) => {
+                Alert.alert("Lỗi", "Có lỗi xảy ra.");
+                this.setState({ isLoading: false });
+            });
+    }
+
+    createConversation = (otherUserId) => {
+        const {token} = this.props.auth;
+        const headers = {
+            [JWT_TOKEN]: `Bearer ${token}`,
+        };
+
+        const data = {
+            userId: otherUserId
+        }
+
+        axios
+            .post(`${Config.API_URL}/api/conversation/private/`, data,{ headers })
+            .then((res) => {
+                return res.data;
+            })
+            .catch((err) => {
+                Alert.alert("Lỗi", "Có lỗi xảy ra.");
+                this.setState({ isLoading: false });
+            });
+    }
+
+    handleClickItemUserSlide = (userId, username) => {
+        const conId = this.checkIsExistConversationOfTwoUser(userId);
+        if(conId) {
+            const {conversation} = this.state;
+            if(conversation.length === 0) {
+                this.props.navigation.navigate("ChattingBox", {
+                    user: username,
+                    messageCache: [],
+                });
+            }else {
+                const messageCache = conversation.filter(c => c.id = conId);
+                this.props.navigation.navigate("ChattingBox", {
+                    user: username,
+                    messageCache: messageCache,
+                });
+            }
+        }else {
+            this.createConversation(userId);
+            this.props.navigation.navigate("ChattingBox", {
+                user: username,
+                messageCache: [],
+            });
+        }
+    }
+
     handleClick = (user, messageCache) => {
         this.props.navigation.navigate("ChattingBox", {
             user: user,
@@ -72,10 +148,11 @@ class ChattingTableScreen extends Component {
     }
 
     render() {
-        const {conversation} = this.state;
+        const {conversation, isLoading} = this.state;
         const uriAvatar = getURIAvatarFromUserId(this.props.auth.userId);
         return (
             <Container>
+                <Loader loading={isLoading} />
                 <Header>
                     <Left>
                         <Button
@@ -99,7 +176,7 @@ class ChattingTableScreen extends Component {
                         <SearchBar/>
                     </View>
                     <View style={styles.userSlide}>
-                        <UserSlide onClick={this.handleClick} />
+                        <UserSlide onClick={this.handleClickItemUserSlide} />
                     </View>
                     <FlatList
                         data={conversation}
@@ -123,6 +200,7 @@ const mapStateToProps = state => ({
     chatting: state.chatting,
     auth: state.auth
 });
+
 const mapDispatchToProps = {socketsSubscribe, socketsConnect, fetchUsers};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
 

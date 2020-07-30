@@ -24,7 +24,7 @@ class UserSlide extends Component {
                         horizontal={true}
                         renderItem={data => {
                             return (
-                                <TouchableOpacity onPress={() => props.onClick(data.item.username)}
+                                <TouchableOpacity onPress={() => props.onClick(data.item.id, data.item.username)}
                                                   keyExtractor={data.item.id.toString()}>
                                     <AvatarIcon userId={data.item.id} isActive={true}/>
                                 </TouchableOpacity>

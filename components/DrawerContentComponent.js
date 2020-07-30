@@ -2,8 +2,10 @@ import React from "react";
 import {Text, View, StyleSheet, Image, TouchableOpacity, SafeAreaView, StatusBar} from "react-native";
 import TabBarIcon from "./TabBarIcon";
 import {ScrollView} from "react-native-gesture-handler";
+import {_retrieveAsyncStorageData} from "./AsyncStorageUtils";
+import {JWT_TOKEN} from "../constants/Constants";
 
-const DrawerContentComponent = ({navigation}) => {
+const DrawerContentComponent = ({navigation, self}) => {
     return (
         <SafeAreaView>
             <ScrollView contentContainerStyle={styles.container}>
@@ -68,8 +70,22 @@ const DrawerContentComponent = ({navigation}) => {
                         <View style={styles.itemRow}>
                             <TabBarIcon name="md-person"/>
                             <TouchableOpacity
-                                onPress={() => {
-                                    navigation.navigate("ChattingLogin");
+                                onPress={async () => {
+                                    if(self.auth.signedIn) {
+                                        navigation.navigate("ChattingLogin", {
+                                            screen: "ChattingContent",
+                                        });
+                                    }else {
+                                        const token = await _retrieveAsyncStorageData(JWT_TOKEN);
+                                        // await self.getUserProfile(token);
+                                        if(token !== null) {
+                                            navigation.navigate("ChattingLogin", {
+                                                screen: "ChattingContent",
+                                            });
+                                        }else {
+                                            navigation.navigate("ChattingLogin");
+                                        }
+                                    }
                                 }}
                             >
                                 <Text style={styles.item}>Chatting</Text>

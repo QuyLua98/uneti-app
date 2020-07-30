@@ -9,17 +9,18 @@ import MapScreen from "../screens/MapScreen";
 import DrawerContentComponent from "../components/DrawerContentComponent";
 import EgovNavigator from "./EgovNavigator";
 import ChattingNavigator from "./ChattingNavigator";
+import {getUserProfile} from "../store/auth/action";
+import {connect} from "react-redux";
 
 const Drawer = createDrawerNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
-export default class LeftDrawerNavigator extends React.Component {
+class LeftDrawerNavigator extends React.Component {
   render() {
     return (
       <Drawer.Navigator
-
         initialRouteName={INITIAL_ROUTE_NAME}
-        drawerContent={(props) => <DrawerContentComponent {...props} />}
+        drawerContent={(props) => <DrawerContentComponent self={this.props} {...props} />}
       >
         <Drawer.Screen
           name="Home"
@@ -37,3 +38,9 @@ export default class LeftDrawerNavigator extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+const mapDispatchToProps = {getUserProfile};
+export default connect(mapStateToProps, mapDispatchToProps)(LeftDrawerNavigator);

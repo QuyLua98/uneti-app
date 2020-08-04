@@ -55,12 +55,46 @@ class ChattingBoxScreen extends Component {
         });
     }
 
+    /**
+     status: MessageStatus.PENDING,
+     type: MessageType.TEXT,
+     content: message.text,
+     sendToUserId: userId,
+     sendToUsername: username,
+     conId: conId,
+     createdDate: message.createdAt
+     */
     onSend = (messages) => {
         const {userIdReceive, usernameReceive, conId} = this.state;
         const newMessage = [...messages, ...this.state.messages];
         this.setState({messages: newMessage});
         const messageEntity = messageToEntity(messages[0], userIdReceive, usernameReceive, conId);
         this.props.socketsMessageSend(messageEntity, ENDPOINT_SEND_MESSAGE);
+    }
+
+    /**
+     _id: entity.userSentId,
+     text: entity.content,
+     createdAt: moment(entity.createdDate),
+     user: {
+            _id: entity.userSentId,
+            avatar: getURIAvatarFromUserId(entity.conId),
+        },
+     */
+    onReceive = (message) => {
+        this.setState((previousState) => {
+            return {
+                messages: GiftedChat.append(previousState.messages, {
+                    _id: message._id,
+                    text: message.text,
+                    createdAt: message.createdAt,
+                    user: {
+                        _id: message.user._id,
+                        avatar: message.user.avatar,
+                    },
+                }),
+            };
+        });
     }
 
     render() {

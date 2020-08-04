@@ -3,7 +3,9 @@ import React, {Component} from "react";
 import {
     StyleSheet,
     FlatList,
-    Alert
+    Alert,
+    TouchableOpacity,
+    InteractionManager
 } from "react-native";
 import {
     Container,
@@ -28,7 +30,7 @@ import axios from "axios";
 import {Config} from "../../config";
 import {_retrieveAsyncStorageData} from "../../components/AsyncStorageUtils";
 import {getURIAvatarFromUserId} from "./components/Utils";
-import {fetchUsers} from "../../store/user/action";
+import {fetchUsers, toggle} from "../../store/user/action";
 import Loader from "./components/Loader";
 
 class ChattingTableScreen extends Component {
@@ -40,14 +42,17 @@ class ChattingTableScreen extends Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        console.log("did mount")
         this.setState({isLoading: true})
-        const token = this.props.auth.token;
-        this.getConversation(token);
-        this.props.fetchUsers(token);
-        await this.props.socketsConnect(token);
-        this.props.socketsSubscribe(ENDPOINT_BROKER);
-        this.setState({isLoading: false})
+        InteractionManager.runAfterInteractions(async () => {
+            const token = this.props.auth.token;
+            this.getConversation(token);
+            this.props.fetchUsers(token);
+            await this.props.socketsConnect(token);
+            this.props.socketsSubscribe(ENDPOINT_BROKER);
+            this.setState({isLoading: false})
+        });
     }
 
     getConversation(token) {
@@ -153,6 +158,10 @@ class ChattingTableScreen extends Component {
         });
     }
 
+    test = () => {
+        this.props.toggle([]);
+    }
+
     render() {
         const {conversation, isLoading} = this.state;
         const uriAvatar = getURIAvatarFromUserId(this.props.auth.userId);
@@ -174,7 +183,9 @@ class ChattingTableScreen extends Component {
                         <Title>Chat</Title>
                     </Body>
                     <Right>
-                        <Thumbnail small source={{uri: uriAvatar}} />
+                        <TouchableOpacity opacity={0.8} onPress={this.test}>
+                            <Thumbnail small source={{uri: uriAvatar}} />
+                        </TouchableOpacity>
                     </Right>
                 </Header>
                 <View contentContainerStyle={{flex: 1}}>
@@ -208,7 +219,7 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const mapDispatchToProps = {socketsSubscribe, socketsConnect, fetchUsers};
+const mapDispatchToProps = {socketsSubscribe, socketsConnect, fetchUsers, toggle};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
 
 const styles = StyleSheet.create({

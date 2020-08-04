@@ -14,6 +14,10 @@ class UserSlide extends Component {
         super(props);
     }
 
+    componentDidMount() {
+        console.log("User slide did mount")
+    }
+
     render() {
         const props = this.props;
         const users = this.props.user.users;

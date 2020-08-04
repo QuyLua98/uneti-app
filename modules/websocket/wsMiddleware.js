@@ -71,8 +71,6 @@ export const wsMiddleware = store => next => action => {
                 destination: action.payload.api,
                 body: JSON.stringify(action.payload.data)
             });
-            console.log("sended=>>>>>>>>>>>>>>>")
-            console.log(action.payload.data)
             // store.dispatch(chattingAction.socketsMessageSending(action.payload.data));
             break;
         case types.SOCKETS_MESSAGE_SUBSCRIBE:

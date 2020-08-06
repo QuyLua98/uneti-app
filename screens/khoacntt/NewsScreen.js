@@ -48,7 +48,7 @@ export default class NewsScreen extends React.Component {
     loadHotNews = () => {
         this.setState({isHotNewsLoading: true});
         axios
-            .get(Config.API_URL + `/api/khoacntt/`)
+            .get(Config.MAIN_DOMAIN + `/api/khoacntt/`)
             .then((res) => {
                 this.setState({hotNews: res.data});
                 this.setState({isHotNewsLoading: false});
@@ -62,7 +62,7 @@ export default class NewsScreen extends React.Component {
     loadEventNews = () => {
         this.setState({isEventNewsLoading: true});
         axios
-            .get(Config.API_URL + `/api/khoacntt/event/`)
+            .get(Config.MAIN_DOMAIN + `/api/khoacntt/event/`)
             .then((res) => {
                 this.setState({eventNews: res.data});
                 this.setState({isEventNewsLoading: false});

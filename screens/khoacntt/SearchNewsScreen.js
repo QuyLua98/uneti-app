@@ -31,7 +31,7 @@ export default class SearchNewsScreen extends React.Component {
     loadingSearchNews = (textSearch) => {
         this.setState({isLoading: true});
         axios
-            .get(Config.API_URL + `/api/khoacntt/search?q=${textSearch}`)
+            .get(Config.MAIN_DOMAIN + `/api/khoacntt/search?q=${textSearch}`)
             .then((res) => {
                 this.setState({news: res.data});
                 this.setState({isLoading: false});

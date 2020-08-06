@@ -59,7 +59,7 @@ export default class LoginScreen extends React.Component {
         AsyncStorage.getItem(EGOV_TOKEN).then((token) => {
             if (token) {
                 axios
-                    .post(Config.API_URL + `/api/isLogin`, {
+                    .post(Config.MAIN_DOMAIN + `/api/isLogin`, {
                         token: token
                     })
                     .then((res) => {
@@ -91,7 +91,7 @@ export default class LoginScreen extends React.Component {
             this.setState({isLoading: true});
 
             let pK = await axios
-                .get(Config.API_URL + `/api/salt/${username}`)
+                .get(Config.MAIN_DOMAIN + `/api/salt/${username}`)
                 .then((res) => {
                     return res.data;
                 });
@@ -99,7 +99,7 @@ export default class LoginScreen extends React.Component {
             let encodePassword = PasswordEncode(pK, password, _0x6100);
 
             axios
-                .post(Config.API_URL + `/api/login`, {
+                .post(Config.MAIN_DOMAIN + `/api/login`, {
                     username: username,
                     password: encodePassword
                 })

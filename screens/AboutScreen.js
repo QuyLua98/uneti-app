@@ -35,7 +35,7 @@ export default class AboutScreen extends React.Component {
   loadListLecturer = () => {
     this.setState({ isLoading: true });
     axios
-      .get(Config.API_URL + `/api/khoacntt/lecturer/`)
+      .get(Config.MAIN_DOMAIN + `/api/khoacntt/lecturer/`)
       .then((res) => {
         this.setState({ lecturers: res.data });
         this.setState({ isLoading: false });

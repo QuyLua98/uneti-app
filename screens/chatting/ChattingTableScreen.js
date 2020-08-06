@@ -60,7 +60,7 @@ class ChattingTableScreen extends Component {
             [JWT_TOKEN]: `Bearer ${token}`,
         };
         axios
-            .get(Config.API_URL + `/api/user/conversation`, { headers })
+            .get(Config.CHAT_DOMAIN + `/api/user/conversation`, { headers })
             .then((res) => {
                 this.setState({ conversation: res.data });
                 this.setState({ isLoading: false });
@@ -89,7 +89,7 @@ class ChattingTableScreen extends Component {
             [JWT_TOKEN]: `Bearer ${token}`,
         };
         return await axios
-            .get(`${Config.API_URL}/api/conversation/check-user-exist-con?userId=${userId}`, { headers })
+            .get(`${Config.CHAT_DOMAIN}/api/conversation/check-user-exist-con?userId=${userId}`, { headers })
             .then((res) => {
                 return res.data;
             })
@@ -107,7 +107,7 @@ class ChattingTableScreen extends Component {
         };
 
         axios
-            .post(`${Config.API_URL}/api/conversation/private/`, `${otherUserId}`,{ headers })
+            .post(`${Config.CHAT_DOMAIN}/api/conversation/private/`, `${otherUserId}`,{ headers })
             .then((res) => {
                 return res.data;
             })

@@ -7,6 +7,7 @@ import {Config} from "../../config";
 import MessageStatus from "../../screens/chatting/components/MessageStatus";
 import MessageType from "../../screens/chatting/components/MessageType";
 import {messageToEntity} from "../../components/module/chatting/ConvertMessage";
+import ChattingBoxScreen from "../../screens/chatting/ChattingBoxScreen";
 
 
 let stompClient = null;
@@ -28,6 +29,7 @@ export const wsMiddleware = store => next => action => {
 
     const onSubscribeMessage = message => {
         // Parse the JSON message received on the websocket
+        ChattingBoxScreen.onReceive(message);
         store.dispatch(chattingAction.socketsMessageReceiving(message.body));
     };
 
@@ -41,7 +43,7 @@ export const wsMiddleware = store => next => action => {
             }
             store.dispatch(chattingAction.socketsConnecting);
 
-            const wsURL = `${Config.API_URL}/ws?${JWT_TOKEN}=${action.payload.token}`;
+            const wsURL = `${Config.CHAT_DOMAIN}/ws?${JWT_TOKEN}=${action.payload.token}`;
             stompClient = new Client();
             stompClient.reconnectDelay = 15000;
             stompClient.webSocketFactory = function () {

@@ -47,7 +47,7 @@ export default class ScheduleTestScreen extends React.Component {
     this.setState({ isLoading: true, headers: headers });
 
     axios
-      .get(Config.API_URL + `/api/student/schedule/test/`, { headers })
+      .get(Config.MAIN_DOMAIN + `/api/student/schedule/test/`, { headers })
       .then((res) => {
         let list = res.data;
         let sort = this.sortListTest(list);
@@ -69,7 +69,7 @@ export default class ScheduleTestScreen extends React.Component {
     this.setState({ isLoadingBody: true });
     const { headers } = this.state;
     axios
-      .get(Config.API_URL + `/api/student/schedule/test/${num}/`, { headers })
+      .get(Config.MAIN_DOMAIN + `/api/student/schedule/test/${num}/`, { headers })
       .then((res) => {
         let schedule = res.data;
         // Get day of week

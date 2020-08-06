@@ -17,7 +17,7 @@ export const fetchUsers = (token) => {
             [JWT_TOKEN]: `Bearer ${token}`,
         };
         axios
-            .get(Config.API_URL + `/api/user/`, {headers})
+            .get(Config.CHAT_DOMAIN + `/api/user/`, {headers})
             .then(res => {
                 const users = res.data;
                 dispatch(toggle(users))

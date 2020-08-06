@@ -31,7 +31,7 @@ export function login(username, password, isRemember) {
     return async dispatch => {
         const credentials = {username, password};
         await axios
-            .post(`${Config.API_URL}/api/login`, credentials)
+            .post(`${Config.CHAT_DOMAIN}/api/login`, credentials)
             .then(success => {
                 const token = success.data;
                 if (isRemember) {
@@ -67,7 +67,7 @@ export const getUserProfile = (token) => {
             [JWT_TOKEN]: `Bearer ${token}`
         };
         await axios
-            .get(`${Config.API_URL}/api/user/profile`, {headers})
+            .get(`${Config.CHAT_DOMAIN}/api/user/profile`, {headers})
             .then(res => {
                 dispatch(
                     loggedIn({

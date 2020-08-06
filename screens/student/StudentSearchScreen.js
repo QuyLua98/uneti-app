@@ -48,7 +48,7 @@ export default class StudentSearchScreen extends Component {
             if (sessionAsp === null) {
                 this.setState({isLoading: true});
                 await axios
-                    .get(Config.API_URL + `/api/session`)
+                    .get(Config.MAIN_DOMAIN + `/api/session`)
                     .then(async (res) => {
                         await AsyncStorage.setItem(SESSION_ASP, res.data);
                         this.setState({

@@ -42,9 +42,9 @@ export default class ScheduleLectureScreen extends React.Component {
         };
         let url;
         if (this.state.isExam) {
-            url = Config.API_URL + `/api/egov/xem-lich-thi-theo-tuan?date=${param}`;
+            url = Config.MAIN_DOMAIN + `/api/egov/xem-lich-thi-theo-tuan?date=${param}`;
         } else {
-            url = Config.API_URL + `/api/egov/xem-lich-day-theo-tuan?date=${param}`;
+            url = Config.MAIN_DOMAIN + `/api/egov/xem-lich-day-theo-tuan?date=${param}`;
         }
         axios
             .get(url, {headers})

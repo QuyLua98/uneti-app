@@ -39,7 +39,7 @@ export default class DebtScreen extends React.Component {
     };
 
     axios
-      .get(Config.API_URL + `/api/student/debt/`, { headers })
+      .get(Config.MAIN_DOMAIN + `/api/student/debt/`, { headers })
       .then((res) => {
         this.setState({ listDebt: res.data });
         this.setState({ isLoading: false });

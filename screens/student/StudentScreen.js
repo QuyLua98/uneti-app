@@ -50,7 +50,7 @@ export default class StudentScreen extends React.Component {
     };
 
     axios
-      .get(Config.API_URL + `/api/student/mark/`, { headers })
+      .get(Config.MAIN_DOMAIN + `/api/student/mark/`, { headers })
       .then((res) => {
         this.setState({ student: res.data });
         this.setState({ isLoading: false });

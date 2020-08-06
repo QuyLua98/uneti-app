@@ -82,6 +82,7 @@ class ChattingBoxScreen extends Component {
         },
      */
     onReceive = (message) => {
+        console.log(this.state.conId);
         this.setState((previousState) => {
             return {
                 messages: GiftedChat.append(previousState.messages, {

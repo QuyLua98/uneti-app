@@ -51,7 +51,7 @@ export default class EgovScreen extends Component {
         };
 
         axios
-            .get(Config.API_URL + `/api/egov/profile`, {headers})
+            .get(Config.MAIN_DOMAIN + `/api/egov/profile`, {headers})
             .then((res) => {
                 this.setState({lecture: res.data});
                 this.setState({isLoading: false});
@@ -62,7 +62,7 @@ export default class EgovScreen extends Component {
             });
 
         axios
-            .get(Config.API_URL + `/api/egov/xem-luong`, {headers})
+            .get(Config.MAIN_DOMAIN + `/api/egov/xem-luong`, {headers})
             .then((res) => {
                 this.setState({luong: res.data});
                 this.setState({isLoading: false});

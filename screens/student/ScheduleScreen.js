@@ -43,7 +43,7 @@ export default class ScheduleScreen extends React.Component {
     };
 
     axios
-      .get(Config.API_URL + `/api/student/schedule/current/`, { headers })
+      .get(Config.MAIN_DOMAIN + `/api/student/schedule/current/`, { headers })
       .then((res) => {
         this.setState({ schedule: res.data });
         this.init();

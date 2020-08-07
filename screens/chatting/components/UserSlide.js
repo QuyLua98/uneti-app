@@ -1,12 +1,8 @@
 import React, {Component} from "react";
-import {FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert} from "react-native";
+import {FlatList, StyleSheet, TouchableOpacity} from "react-native";
 import {View, Text} from "native-base";
 import Colors from "../../../constants/Colors";
 import AvatarIcon from "./AvatarIcon";
-import {JWT_TOKEN} from "../../../constants/Constants";
-import axios from "axios";
-import {Config} from "../../../config";
-import {socketsConnect, socketsSubscribe} from "../../../store/chat/action";
 import {connect} from "react-redux";
 
 class UserSlide extends Component {
@@ -14,9 +10,6 @@ class UserSlide extends Component {
         super(props);
     }
 
-    componentDidMount() {
-        console.log("User slide did mount")
-    }
 
     render() {
         const props = this.props;

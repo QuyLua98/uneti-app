@@ -24,7 +24,7 @@ import {
     Text
 } from 'native-base';
 import {GiftedChat, Actions, Send} from 'react-native-gifted-chat';
-import {socketsMessageSend} from "../../store/chat/action";
+import {incomingMessage, sendMessage} from "../../store/chat/action";
 import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
 import Colors from "../../constants/Colors";
 import {entityToMessage, messageToEntity} from "../../components/module/chatting/ConvertMessage";
@@ -35,23 +35,10 @@ class ChattingBoxScreen extends Component {
         super(props);
         this.state = {
             user: null,
-            conId: null,
-            userIdReceive: null,
-            usernameReceive: null,
         }
     }
 
     componentDidMount() {
-        const {userIdReceive, usernameReceive, messages, conId} = this.props.route.params;
-        if (messages !== undefined) {
-            const messages = messages.map(m => entityToMessage(m));
-            this.setState({messages: messages});
-        }
-        this.setState({
-            userIdReceive: userIdReceive,
-            usernameReceive: usernameReceive,
-            conId: conId
-        });
     }
 
     /**
@@ -64,11 +51,10 @@ class ChattingBoxScreen extends Component {
      createdDate: message.createdAt
      */
     onSend = (messages) => {
-        const {userIdReceive, usernameReceive, conId} = this.state;
-        const newMessage = [...messages, ...this.state.messages];
-        this.setState({messages: newMessage});
+        this.props.incomingMessage(messages);
+        const {userIdReceive, usernameReceive, conId} = this.props.chat;
         const messageEntity = messageToEntity(messages[0], userIdReceive, usernameReceive, conId);
-        this.props.socketsMessageSend(messageEntity, ENDPOINT_SEND_MESSAGE);
+        this.props.sendMessage(messageEntity, ENDPOINT_SEND_MESSAGE);
     }
 
     /**
@@ -81,7 +67,6 @@ class ChattingBoxScreen extends Component {
         },
      */
     onReceive = (message) => {
-        console.log(this.state.conId);
         this.setState((previousState) => {
             return {
                 messages: GiftedChat.append(previousState.messages, {
@@ -98,10 +83,9 @@ class ChattingBoxScreen extends Component {
     }
 
     render() {
-        const {messages} = this.state;
+        const {messages} = this.props.chat;
         const {navigation} = this.props;
         const {userId} = this.props.auth;
-        console.log(userId)
         return (
             <Container>
                 <Header>
@@ -109,7 +93,7 @@ class ChattingBoxScreen extends Component {
                         <Button
                             transparent
                             onPress={() => {
-                                navigation.goBack();
+                                navigation.goBack(null);
                             }}
                         >
                             <Icon name="arrow-back"/>
@@ -160,7 +144,7 @@ const mapStateToProps = state => ({
     chat: state.chat,
     auth: state.auth
 });
-const mapDispatchToProps = {socketsMessageSend};
+const mapDispatchToProps = {sendMessage, incomingMessage};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingBoxScreen);
 
 const styles = StyleSheet.create({})

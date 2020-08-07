@@ -16,13 +16,12 @@ export default (state = defaultState, action) => {
                 userIdReceive: action.userIdReceive,
                 usernameReceive: action.usernameReceive,
             }
-        case types.MESSAGE_SENDING:
+        case types.MESSAGE_INCOMING:
             return {
-                message: action.messageSend,
-            }
-        case types.MESSAGE_RECEIVING:
-            return {
-                message: action.messageReceive,
+                conId: state.conId,
+                messages: [...action.incomingMessages, ...state.messages],
+                userIdReceive: state.userIdReceive,
+                usernameReceive: state.usernameReceive,
             }
         default:
             return state;

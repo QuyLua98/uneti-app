@@ -10,10 +10,10 @@ export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) =>
     };
 };
 
-export const incomingMessage = receiveMessage => {
+export const incomingMessage = incomingMessages => {
     return {
-        type: types.MESSAGE_RECEIVING,
-        messageReceive: receiveMessage
+        type: types.MESSAGE_INCOMING,
+        incomingMessages: incomingMessages
     };
 };
 

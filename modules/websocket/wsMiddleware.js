@@ -8,7 +8,7 @@ import {ENDPOINT_BROKER, JWT_TOKEN} from "../../constants/Constants";
 import {Config} from "../../config";
 import MessageStatus from "../../screens/chatting/components/MessageStatus";
 import MessageType from "../../screens/chatting/components/MessageType";
-import {messageToEntity} from "../../components/module/chatting/ConvertMessage";
+import {entityToMessage, messageToEntity} from "../../components/module/chatting/ConvertMessage";
 import ChattingBoxScreen from "../../screens/chatting/ChattingBoxScreen";
 
 
@@ -31,7 +31,9 @@ export const wsMiddleware = store => next => action => {
 
     const onSubscribeMessage = message => {
         // Parse the JSON message received on the websocket
-        store.dispatch(chattingAction.incomingMessage(message.body));
+        const messages = [];
+        messages.push(entityToMessage(message));
+        store.dispatch(chattingAction.incomingMessage(messages));
     };
 
     switch (action.type) {
@@ -74,7 +76,6 @@ export const wsMiddleware = store => next => action => {
                 destination: action.payload.api,
                 body: JSON.stringify(action.payload.data)
             });
-            store.dispatch(chattingAction.sendMessage(action.payload.data));
             break;
         case chattingTypes.MESSAGE_SUBSCRIBE:
             if (stompClient) {

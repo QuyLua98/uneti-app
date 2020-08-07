@@ -33,18 +33,18 @@ import {_retrieveAsyncStorageData} from "../../components/AsyncStorageUtils";
 import {getURIAvatarFromUserId} from "./components/Utils";
 import {fetchUsers, toggle} from "../../store/user/action";
 import Loader from "./components/Loader";
+import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
 
 class ChattingTableScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoading: false,
-            conversation: []
+            conversations: []
         }
     }
 
     componentDidMount() {
-        console.log("did mount")
         this.setState({isLoading: true})
         InteractionManager.runAfterInteractions(async () => {
             const token = this.props.auth.token;
@@ -67,7 +67,7 @@ class ChattingTableScreen extends Component {
         axios
             .get(Config.CHAT_DOMAIN + `/api/user/conversation`, { headers })
             .then((res) => {
-                this.setState({ conversation: res.data });
+                this.setState({ conversations: res.data });
                 this.setState({ isLoading: false });
             })
             .catch((err) => {
@@ -78,10 +78,10 @@ class ChattingTableScreen extends Component {
     }
 
     checkIsExistConversationOfTwoUser = async (userId) => {
-        const {conversation} = this.state;
+        const {conversations} = this.state;
         let isExist = false;
-        for(let con in conversation) {
-            if (conversation.hasOwnProperty(con)) {
+        for(let con of conversations) {
+            if (conversations.hasOwnProperty(con)) {
                 isExist = con.userInCon.some(u => u.id = userId);
                 if(isExist) {
                     return con.id;
@@ -124,14 +124,14 @@ class ChattingTableScreen extends Component {
 
     handleClickItemUserSlide = async (userId, username) => {
         const conId = await this.checkIsExistConversationOfTwoUser(userId);
-        console.log("conId" + conId)
         if(conId) {
-            const {conversation} = this.state;
-            if(conversation.length === 0) {
+            const {conversations} = this.state;
+            if(conversations.length === 0) {
                 this.props.setUpChatBox(conId, [], userId, username);
                 this.props.navigation.navigate("ChattingBox");
             }else {
-                const messages = conversation.filter(c => c.id = conId);
+                const con = conversations.find(c => c.id = conId);
+                const messages = con.messages.map(m => entityToMessage(m)).sort((m1, m2) => m2.createdAt - m1.createdAt);
                 this.props.setUpChatBox(conId, messages, userId, username);
                 this.props.navigation.navigate("ChattingBox");
             }
@@ -142,7 +142,8 @@ class ChattingTableScreen extends Component {
         }
     }
 
-    handleClick = (userIdReceive, usernameReceive, conId, messages) => {
+    handleClick = (userIdReceive, usernameReceive, conId, messageEntities) => {
+        const messages = messageEntities.map(m => entityToMessage(m)).sort((m1, m2) => m2.createdAt - m1.createdAt);
         this.props.setUpChatBox(conId, messages, userIdReceive, usernameReceive);
         this.props.navigation.navigate("ChattingBox");
     }
@@ -152,7 +153,7 @@ class ChattingTableScreen extends Component {
     }
 
     render() {
-        const {conversation, isLoading} = this.state;
+        const {conversations, isLoading} = this.state;
         const uriAvatar = getURIAvatarFromUserId(this.props.auth.userId);
         return (
             <Container>
@@ -185,13 +186,16 @@ class ChattingTableScreen extends Component {
                         <UserSlide onClick={this.handleClickItemUserSlide} />
                     </View>
                     <FlatList
-                        data={conversation}
+                        data={conversations}
                         renderItem={(data) => {
                             return <ChatItemBox
-                                user={data.item.userInCon[0]}
+                                type={data.item.type}
+                                users={data.item.userInCon}
+                                conId={data.item.id}
                                 keyExtractor={data.item.code}
-                                onClick={() => this.handleClick(data.item.userInCon[0].id, data.item.userInCon[0].username, data.item.id, data.item.messages)}
+                                onClick={this.handleClick}
                                 lastMessage={data.item.messages[0]}
+                                messages={data.item.messages}
                             />
                         }}
                     />

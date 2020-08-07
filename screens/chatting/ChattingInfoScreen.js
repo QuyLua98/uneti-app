@@ -1,22 +1,16 @@
 import React, {Component} from "react";
-
-
 import {
     StyleSheet,
 } from "react-native";
 import {
     Container,
     Body,
-    Content,
     Button,
     Header,
     Icon,
     Left,
     Right,
-    List,
     Title,
-    ListItem,
-    Thumbnail
 } from 'native-base';
 import Colors from "../../constants/Colors";
 

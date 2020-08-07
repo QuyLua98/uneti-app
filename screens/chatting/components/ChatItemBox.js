@@ -1,10 +1,12 @@
-import {Body, Left, ListItem, Right, Thumbnail} from "native-base";
+import {Body, Left, ListItem, Right} from "native-base";
 import {Text} from "react-native";
 import React, {Component} from "react";
 import AvatarIcon from "./AvatarIcon";
 import Colors from "../../../constants/Colors";
+import ConversationType from "../../../constants/ConversationType";
+import {connect} from 'react-redux';
 
-export default class ChatItemBox extends Component {
+class ChatItemBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,17 +15,28 @@ export default class ChatItemBox extends Component {
     }
 
     render() {
-        const {user, lastMessage} = this.props;
+        const currentUserId = this.props.auth.userId;
+        const {type, users, lastMessage, messages, conId} = this.props;
         if(lastMessage === null || lastMessage === undefined) {
             return <></>
         }
+        let user;
+        switch (type) {
+            case ConversationType.PRIVATE:
+                user = users.find(u => u.id !== currentUserId)
+                break;
+            case ConversationType.GROUP:
+                break;
+            default:
+                return <></>
+        }
+
         return (
             <ListItem avatar button={true}
                       onPress={() => {
-                          this.props.onClick()
+                          this.props.onClick(user.id, user.username, conId, messages)
                       }}>
                 <Left>
-                    {/*<Thumbnail source={require('../../../assets/images/chatting/avatar/avatar-quy.jpg')}/>*/}
                     <AvatarIcon userId={user.id} isActive={true} />
                 </Left>
                 <Body style={{borderColor: Colors.white}}>
@@ -37,3 +50,8 @@ export default class ChatItemBox extends Component {
         )
     }
 }
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+export default connect(mapStateToProps)(ChatItemBox);

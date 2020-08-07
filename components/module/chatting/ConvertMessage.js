@@ -2,6 +2,7 @@ import MessageStatus from "../../../screens/chatting/components/MessageStatus";
 import MessageType from "../../../screens/chatting/components/MessageType";
 import {getURIAvatarFromUserId} from "../../../screens/chatting/components/Utils";
 import moment from "moment";
+import {randomUUID} from "../../../utils/UUID";
 
 export const messageToEntity = (message, userId, username, conId) => {
     return {
@@ -17,7 +18,7 @@ export const messageToEntity = (message, userId, username, conId) => {
 
 export const entityToMessage = (entity) => {
     return {
-        _id: entity.userSentId,
+        _id: randomUUID(),
         text: entity.content,
         createdAt: moment(entity.createdDate),
         user: {

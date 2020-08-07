@@ -35,7 +35,6 @@ class ChattingBoxScreen extends Component {
         super(props);
         this.state = {
             user: null,
-            messages: [],
             conId: null,
             userIdReceive: null,
             usernameReceive: null,
@@ -43,9 +42,9 @@ class ChattingBoxScreen extends Component {
     }
 
     componentDidMount() {
-        const {userIdReceive, usernameReceive, messageCache, conId} = this.props.route.params;
-        if (messageCache !== undefined) {
-            const messages = messageCache.map(m => entityToMessage(m));
+        const {userIdReceive, usernameReceive, messages, conId} = this.props.route.params;
+        if (messages !== undefined) {
+            const messages = messages.map(m => entityToMessage(m));
             this.setState({messages: messages});
         }
         this.setState({
@@ -158,7 +157,7 @@ class ChattingBoxScreen extends Component {
 };
 
 const mapStateToProps = state => ({
-    chatting: state.chatting,
+    chat: state.chat,
     auth: state.auth
 });
 const mapDispatchToProps = {socketsMessageSend};

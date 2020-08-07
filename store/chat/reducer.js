@@ -1,51 +1,29 @@
 import * as types from "./types";
-import MessageStatus from "../../screens/chatting/components/MessageStatus";
-import MessageType from "../../screens/chatting/components/MessageType";
 
 const defaultState = {
-    loaded: false,
+    conId: "",
     messages: "",
-    connected: false
+    userIdReceive: "",
+    usernameReceive: "",
 };
 
 export default (state = defaultState, action) => {
     switch (action.type) {
-        case types.SOCKETS_CONNECTING:
+        case types.SETUP_CHAT_BOX:
             return {
-                loaded: true,
-                message: "Connecting...",
-                connected: false
-            };
-        case types.SOCKETS_CONNECTED:
+                conId: action.conId,
+                messages: action.messages,
+                userIdReceive: action.userIdReceive,
+                usernameReceive: action.usernameReceive,
+            }
+        case types.MESSAGE_SENDING:
             return {
-                loaded: true,
-                message: "Connected",
-                connected: true
-            };
-        case types.SOCKETS_DISCONNECTING:
-            return {
-                loaded: true,
-                message: "Disconnecting...",
-                connected: true
-            };
-        case types.SOCKETS_DISCONNECTED:
-            return {
-                loaded: true,
-                message: "Disconnected",
-                connected: false
-            };
-        case types.SOCKETS_MESSAGE_SENDING:
-            return {
-                loaded: true,
                 message: action.messageSend,
-                connected: true
-            };
-        case types.SOCKETS_MESSAGE_RECEIVING:
+            }
+        case types.MESSAGE_RECEIVING:
             return {
-                loaded: true,
                 message: action.messageReceive,
-                connected: true
-            };
+            }
         default:
             return state;
     }

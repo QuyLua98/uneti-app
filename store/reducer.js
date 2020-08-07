@@ -1,8 +1,9 @@
 import { combineReducers } from "redux";
-import chatting from "./chat/reducer";
+import chat from "./chat/reducer";
 import auth from "./auth/reducer";
 import user from "./user/reducer";
+import socket from "./socket/reducer";
 
 export default combineReducers({
-    chatting, auth, user
+    chat, auth, user, socket
 });

@@ -63,7 +63,7 @@ export const logout = () => {
 
 export const getUserProfile = (token) => {
     return async dispatch => {
-        let headers = {
+        const headers = {
             [JWT_TOKEN]: `Bearer ${token}`
         };
         await axios
@@ -87,3 +87,5 @@ export const getUserProfile = (token) => {
             });
     };
 };
+
+

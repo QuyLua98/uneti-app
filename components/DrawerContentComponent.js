@@ -4,6 +4,7 @@ import TabBarIcon from "./TabBarIcon";
 import {ScrollView} from "react-native-gesture-handler";
 import {_retrieveAsyncStorageData} from "./AsyncStorageUtils";
 import {JWT_TOKEN} from "../constants/Constants";
+import {isValidToken} from "../utils/TokenUtils";
 
 const DrawerContentComponent = ({navigation, self}) => {
     return (
@@ -77,8 +78,9 @@ const DrawerContentComponent = ({navigation, self}) => {
                                         });
                                     }else {
                                         const token = await _retrieveAsyncStorageData(JWT_TOKEN);
-                                        await self.getUserProfile(token);
-                                        if(token !== null) {
+                                        const isValid = await isValidToken(token);
+                                        if(token !== null && isValid) {
+                                            await self.getUserProfile(token);
                                             navigation.navigate("ChattingLogin", {
                                                 screen: "ChattingContent",
                                             });

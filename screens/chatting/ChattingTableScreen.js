@@ -20,9 +20,10 @@ import {
     Thumbnail
 } from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
-import {socketsConnect, socketsSubscribe} from "../../store/chat/action";
+import {setUpChatBox, subscribe} from "../../store/chat/action";
+import {socketsConnect} from "../../store/socket/action";
 import {connect} from 'react-redux';
-import {CODE_SEARCH, ENDPOINT_BROKER, JWT_TOKEN} from '../../constants/Constants';
+import {ENDPOINT_BROKER, JWT_TOKEN} from '../../constants/Constants';
 import SearchBar from "./components/SearchBar";
 import UserSlide from "./components/UserSlide";
 import ChatItemBox from "./components/ChatItemBox";
@@ -47,11 +48,15 @@ class ChattingTableScreen extends Component {
         this.setState({isLoading: true})
         InteractionManager.runAfterInteractions(async () => {
             const token = this.props.auth.token;
-            this.getConversation(token);
-            this.props.fetchUsers(token);
-            await this.props.socketsConnect(token);
-            this.props.socketsSubscribe(ENDPOINT_BROKER);
-            this.setState({isLoading: false})
+            if(token !== null || token !== "") {
+                this.getConversation(token);
+                this.props.fetchUsers(token);
+                await this.props.socketsConnect(token);
+                this.props.subscribe(ENDPOINT_BROKER);
+                this.setState({isLoading: false})
+            } else {
+                this.props.navigation.goBack(null);
+            }
         });
     }
 
@@ -93,7 +98,7 @@ class ChattingTableScreen extends Component {
             .then((res) => {
                 return res.data;
             })
-            .catch((err) => {
+            .catch(() => {
                 Alert.alert("Lỗi", "Có lỗi xảy ra.");
                 this.setState({ isLoading: false });
             });
@@ -111,7 +116,7 @@ class ChattingTableScreen extends Component {
             .then((res) => {
                 return res.data;
             })
-            .catch((err) => {
+            .catch(() => {
                 Alert.alert("Lỗi", "Có lỗi xảy ra.");
                 this.setState({ isLoading: false });
             });
@@ -123,39 +128,23 @@ class ChattingTableScreen extends Component {
         if(conId) {
             const {conversation} = this.state;
             if(conversation.length === 0) {
-                this.props.navigation.navigate("ChattingBox", {
-                    userIdReceive: userId,
-                    usernameReceive: username,
-                    conId: conId,
-                    messageCache: [],
-                });
+                this.props.setUpChatBox(conId, [], userId, username);
+                this.props.navigation.navigate("ChattingBox");
             }else {
-                const messageCache = conversation.filter(c => c.id = conId);
-                this.props.navigation.navigate("ChattingBox", {
-                    userIdReceive: userId,
-                    usernameReceive: username,
-                    conId: conId,
-                    messageCache: messageCache,
-                });
+                const messages = conversation.filter(c => c.id = conId);
+                this.props.setUpChatBox(conId, messages, userId, username);
+                this.props.navigation.navigate("ChattingBox");
             }
         }else {
             await this.createConversation(userId);
-            this.props.navigation.navigate("ChattingBox", {
-                userIdReceive: userId,
-                usernameReceive: username,
-                conId: conId,
-                messageCache: [],
-            });
+            this.props.setUpChatBox(conId, [], userId, username);
+            this.props.navigation.navigate("ChattingBox");
         }
     }
 
-    handleClick = (userIdReceive, usernameReceive, conId, messageCache) => {
-        this.props.navigation.navigate("ChattingBox", {
-            userIdReceive: userIdReceive,
-            usernameReceive: usernameReceive,
-            conId: conId,
-            messageCache: messageCache,
-        });
+    handleClick = (userIdReceive, usernameReceive, conId, messages) => {
+        this.props.setUpChatBox(conId, messages, userIdReceive, usernameReceive);
+        this.props.navigation.navigate("ChattingBox");
     }
 
     test = () => {
@@ -200,11 +189,9 @@ class ChattingTableScreen extends Component {
                         renderItem={(data) => {
                             return <ChatItemBox
                                 user={data.item.userInCon[0]}
-                                conId={data.item.id}
                                 keyExtractor={data.item.code}
-                                onClick={this.handleClick}
-                                lastMessage={data.item.messageCache[0]}
-                                messageCache={data.item.messageCache}
+                                onClick={() => this.handleClick(data.item.userInCon[0].id, data.item.userInCon[0].username, data.item.id, data.item.messages)}
+                                lastMessage={data.item.messages[0]}
                             />
                         }}
                     />
@@ -215,11 +202,11 @@ class ChattingTableScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-    chatting: state.chatting,
+    chat: state.chat,
     auth: state.auth
 });
 
-const mapDispatchToProps = {socketsSubscribe, socketsConnect, fetchUsers, toggle};
+const mapDispatchToProps = {subscribe, socketsConnect, fetchUsers, toggle, setUpChatBox};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
 
 const styles = StyleSheet.create({

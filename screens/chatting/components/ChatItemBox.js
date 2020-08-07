@@ -13,14 +13,14 @@ export default class ChatItemBox extends Component {
     }
 
     render() {
-        const {user, lastMessage, messageCache, conId} = this.props;
+        const {user, lastMessage} = this.props;
         if(lastMessage === null || lastMessage === undefined) {
             return <></>
         }
         return (
             <ListItem avatar button={true}
                       onPress={() => {
-                          this.props.onClick(user.id, user.username, conId, messageCache)
+                          this.props.onClick()
                       }}>
                 <Left>
                     {/*<Thumbnail source={require('../../../assets/images/chatting/avatar/avatar-quy.jpg')}/>*/}

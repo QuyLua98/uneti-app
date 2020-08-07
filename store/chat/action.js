@@ -1,42 +1,25 @@
 import * as types from "./types";
 
-export const socketsConnecting = () => {
-    return {type: types.SOCKETS_CONNECTING};
-};
-export const socketsConnect = (token) => {
+export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) => {
     return {
-        type: types.SOCKETS_CONNECT,
-        payload: {
-            token: token
-        }
+        type: types.SETUP_CHAT_BOX,
+        conId: conId,
+        messages: messages,
+        userIdReceive: userIdReceive,
+        usernameReceive: usernameReceive,
     };
 };
-export const socketsConnected = () => {
-    return {type: types.SOCKETS_CONNECTED};
-};
-export const socketsDisconnecting = () => {
-    return {type: types.SOCKETS_DISCONNECTING};
-};
-export const socketsDisconnect = () => {
-    return {type: types.SOCKETS_DISCONNECT};
-};
-export const socketsDisconnected = () => {
-    return {type: types.SOCKETS_DISCONNECTED};
-};
-export const socketsMessageSending = sendMessage => {
-    return {type: types.SOCKETS_MESSAGE_SENDING, messageSend: sendMessage};
-};
 
-export const socketsMessageReceiving = receiveMessage => {
+export const incomingMessage = receiveMessage => {
     return {
-        type: types.SOCKETS_MESSAGE_RECEIVING,
+        type: types.MESSAGE_RECEIVING,
         messageReceive: receiveMessage
     };
 };
 
-export const socketsMessageSend = (data, api) => {
+export const sendMessage = (data, api) => {
     return {
-        type: types.SOCKETS_MESSAGE_SEND,
+        type: types.MESSAGE_SEND,
         payload: {
             data,
             api,
@@ -44,9 +27,9 @@ export const socketsMessageSend = (data, api) => {
     };
 };
 
-export const socketsSubscribe = subscribe => {
+export const subscribe = subscribe => {
     return {
-        type: types.SOCKETS_MESSAGE_SUBSCRIBE,
+        type: types.MESSAGE_SUBSCRIBE,
         payload: {
             subscribe
         }

@@ -51,8 +51,8 @@ class ChattingBoxScreen extends Component {
      createdDate: message.createdAt
      */
     onSend = (messages) => {
-        this.props.incomingMessage(messages);
         const {userIdReceive, usernameReceive, conId} = this.props.chat;
+        this.props.incomingMessage(conId, messages);
         const messageEntity = messageToEntity(messages[0], userIdReceive, usernameReceive, conId);
         this.props.sendMessage(messageEntity, ENDPOINT_SEND_MESSAGE);
     }

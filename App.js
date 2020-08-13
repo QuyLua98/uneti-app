@@ -1,12 +1,11 @@
 import * as React from 'react';
-import {Platform, StatusBar, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {SplashScreen} from 'expo';
 import * as Font from 'expo-font';
 import * as encoding from 'text-encoding';
 import {Ionicons} from '@expo/vector-icons';
 import {NavigationContainer} from '@react-navigation/native';
 import LeftDrawerNavigator from './navigation/LeftDrawerNavigator';
-import useLinking from './navigation/useLinking';
 import {Container} from 'native-base';
 import {Provider} from 'react-redux';
 import store from "./store";
@@ -14,16 +13,12 @@ import store from "./store";
 export default function App(props) {
     console.disableYellowBox = true
     const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-    const [initialNavigationState, setInitialNavigationState] = React.useState();
     const containerRef = React.useRef();
-    const {getInitialState} = useLinking(containerRef);
 
     React.useEffect(() => {
         async function loadResourcesAndDataAsync() {
             try {
                 SplashScreen.preventAutoHide();
-
-                setInitialNavigationState(await getInitialState());
 
                 await Font.loadAsync({
                     'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
@@ -39,7 +34,7 @@ export default function App(props) {
             }
         }
 
-        loadResourcesAndDataAsync();
+        loadResourcesAndDataAsync().then();
     }, []);
 
     if (!isLoadingComplete && !props.skipLoadingScreen) {
@@ -48,7 +43,7 @@ export default function App(props) {
         return (
             <Provider store={store}>
                 <Container style={styles.container}>
-                    <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
+                    <NavigationContainer ref={containerRef}>
                         <LeftDrawerNavigator />
                     </NavigationContainer>
                 </Container>

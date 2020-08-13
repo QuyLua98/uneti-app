@@ -15,6 +15,12 @@ import {connect} from "react-redux";
 const Drawer = createDrawerNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
+export const navigationRef = React.createRef();
+
+export function navigate(name, params) {
+  navigationRef.current?.navigate(name, params);
+}
+
 class LeftDrawerNavigator extends React.Component {
   render() {
     return (

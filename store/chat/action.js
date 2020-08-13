@@ -10,11 +10,16 @@ export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) =>
     };
 };
 
-export const incomingMessage = incomingMessages => {
-    return {
+export const incomingMessage = (conId, incomingMessages) => (dispatch, getState) => {
+    const { conversations } = getState();
+    let conversation = conversations.find(c => c.conId === conId);
+    conversation.messages = [...incomingMessages, ...conversation.messages];
+
+    return dispatch({
         type: types.MESSAGE_INCOMING,
-        incomingMessages: incomingMessages
-    };
+        incomingMessages: incomingMessages,
+        conversations: conversations
+    })
 };
 
 export const sendMessage = (data, api) => {

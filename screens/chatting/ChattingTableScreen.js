@@ -31,7 +31,7 @@ import axios from "axios";
 import {Config} from "../../config";
 import {_retrieveAsyncStorageData} from "../../components/AsyncStorageUtils";
 import {getURIAvatarFromUserId} from "./components/Utils";
-import {fetchUsers, toggle} from "../../store/user/action";
+import {fetchUsersStatus, toggle} from "../../store/user/action";
 import Loader from "./components/Loader";
 import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
 
@@ -50,7 +50,7 @@ class ChattingTableScreen extends Component {
             const token = this.props.auth.token;
             if(token !== null || token !== "") {
                 this.getConversation(token);
-                this.props.fetchUsers(token);
+                this.props.fetchUsersStatus();
                 await this.props.socketsConnect(token);
                 this.props.subscribe(ENDPOINT_BROKER);
                 this.setState({isLoading: false})
@@ -210,7 +210,7 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const mapDispatchToProps = {subscribe, socketsConnect, fetchUsers, toggle, setUpChatBox};
+const mapDispatchToProps = {subscribe, socketsConnect, fetchUsersStatus, toggle, setUpChatBox};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
 
 const styles = StyleSheet.create({

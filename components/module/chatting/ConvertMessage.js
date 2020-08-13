@@ -23,7 +23,7 @@ export const entityToMessage = (entity) => {
         createdAt: moment(entity.createdDate),
         user: {
             _id: entity.userSentId,
-            avatar: getURIAvatarFromUserId(entity.conId),
+            avatar: getURIAvatarFromUserId(entity.userSentId),
         },
     }
 }

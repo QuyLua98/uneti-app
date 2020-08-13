@@ -1,44 +1,36 @@
 import * as chattingAction from "../../store/chat/action";
 import * as socketAction from "../../store/socket/action";
+import * as userAction from "../../store/user/action";
 import * as chattingTypes from "../../store/chat/types";
+import * as userTypes from "../../store/user/types";
 import * as socketTypes from "../../store/socket/types";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import {ENDPOINT_BROKER, JWT_TOKEN} from "../../constants/Constants";
+import {ENDPOINT_BROKER, ENDPOINT_USER_STATUS_BROKER, JWT_TOKEN} from "../../constants/Constants";
 import {Config} from "../../config";
-import MessageStatus from "../../screens/chatting/components/MessageStatus";
-import MessageType from "../../screens/chatting/components/MessageType";
-import {entityToMessage, messageToEntity} from "../../components/module/chatting/ConvertMessage";
-import ChattingBoxScreen from "../../screens/chatting/ChattingBoxScreen";
+import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
+import {Utf8ArrayToJson} from "../../utils/StringUtils";
 
 
 let stompClient = null;
 let subscription = null;
 
 export const wsMiddleware = store => next => action => {
-    // const onSingleMessage = message => {
-    //     // Parse the JSON message received on the websocket
-    //     store.dispatch(chattingAction.socketsMessageReceiving(message.body));
-    //     //Can parse the incoming message and dispatch to the appropriate destination at this point
-    //     store.dispatch({
-    //         type: types.SOCKETS_MESSAGE_RECEIVE,
-    //         payload: message.body
-    //     });
-    //
-    //     subscription.unsubscribe();
-    //     subscription = null;
-    // };
 
     const onSubscribeMessage = message => {
-        // Parse the JSON message received on the websocket
         const messages = [];
+        message = Utf8ArrayToJson(message._binaryBody);
         messages.push(entityToMessage(message));
-        store.dispatch(chattingAction.incomingMessage(messages));
+        store.dispatch(chattingAction.incomingMessage(message.conId, messages));
     };
+
+    const onUserActive = data => {
+        data = Utf8ArrayToJson(data);
+        store.dispatch(userAction.toggle(data));
+    }
 
     switch (action.type) {
         case socketTypes.SOCKETS_CONNECT:
-            console.log("connecting")
             if (stompClient !== null) {
                 store.dispatch(socketAction.socketsDisconnecting());
                 stompClient.deactivate();
@@ -48,7 +40,6 @@ export const wsMiddleware = store => next => action => {
 
             const wsURL = `${Config.CHAT_DOMAIN}/ws?${JWT_TOKEN}=${action.payload.token}`;
             stompClient = new Client();
-            stompClient.reconnectDelay = 15000;
             stompClient.webSocketFactory = function () {
                 return new SockJS(wsURL);
             };
@@ -60,7 +51,8 @@ export const wsMiddleware = store => next => action => {
                 },
                 debug: (str) => {
                     console.log(new Date(), str);
-                }
+                },
+                reconnectDelay: 15000
             });
             stompClient.activate();
             break;
@@ -83,6 +75,14 @@ export const wsMiddleware = store => next => action => {
                     action.payload.subscribe,
                     onSubscribeMessage
                 );
+            }
+            break;
+        case userTypes.USER_STATUS_SUBSCRIBE:
+            if (stompClient) {
+                subscription = stompClient.subscribe(
+                    ENDPOINT_USER_STATUS_BROKER,
+                    onUserActive
+                )
             }
             break;
         default:

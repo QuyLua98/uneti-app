@@ -11,20 +11,25 @@ export const toggle = (data) => {
     };
 };
 
-export const fetchUsers = (token) => {
-    return dispatch => {
-        const headers = {
-            [JWT_TOKEN]: `Bearer ${token}`,
-        };
-        axios
-            .get(Config.CHAT_DOMAIN + `/api/user/`, {headers})
-            .then(res => {
-                const users = res.data;
-                dispatch(toggle(users))
-            })
-            .catch((err) => {
-                console.log(err)
-                Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
-            });
+export const fetchUsersStatus = () => {
+    return {
+        type: types.USER_STATUS_SUBSCRIBE
     }
 }
+// export const fetchUsers = (token) => {
+//     return dispatch => {
+//         const headers = {
+//             [JWT_TOKEN]: `Bearer ${token}`,
+//         };
+//         axios
+//             .get(Config.CHAT_DOMAIN + `/api/user/`, {headers})
+//             .then(res => {
+//                 const users = res.data;
+//                 dispatch(toggle(users))
+//             })
+//             .catch((err) => {
+//                 console.log(err)
+//                 Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
+//             });
+//     }
+// }

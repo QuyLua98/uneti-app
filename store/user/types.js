@@ -1,1 +1,2 @@
 export const TOGGLE = "TOGGLE";
+export const USER_STATUS_SUBSCRIBE = "USER_STATUS_SUBSCRIBE";

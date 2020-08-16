@@ -86,7 +86,7 @@ export default class ScheduleLectureScreen extends React.Component {
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Lịch {isExam ? "thi" : "dạy"}</Title>
+                        <Title>Lịch {isExam ? "coi thi" : "dạy"}</Title>
                     </Body>
                 </Header>
                 <View style={styles.datePicker}>

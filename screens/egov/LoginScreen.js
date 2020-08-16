@@ -59,7 +59,7 @@ export default class LoginScreen extends React.Component {
         AsyncStorage.getItem(EGOV_TOKEN).then((token) => {
             if (token) {
                 axios
-                    .post(Config.MAIN_DOMAIN + `/api/isLogin`, {
+                    .post(Config.MAIN_DOMAIN + `/api/isLogin-egov`, {
                         token: token
                     })
                     .then((res) => {
@@ -99,7 +99,7 @@ export default class LoginScreen extends React.Component {
             let encodePassword = PasswordEncode(pK, password, _0x6100);
 
             axios
-                .post(Config.MAIN_DOMAIN + `/api/login`, {
+                .post(Config.MAIN_DOMAIN + `/api/login-egov`, {
                     username: username,
                     password: encodePassword
                 })

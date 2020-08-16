@@ -36,7 +36,6 @@ export default class NewsScreen extends React.Component {
                 "Nghiên cứu",
                 "Hoạt động",
             ],
-            searchText: ""
         };
     }
 
@@ -103,7 +102,6 @@ export default class NewsScreen extends React.Component {
             isHotNewsLoading,
             isEventNewsLoading,
             category,
-            searchText
         } = this.state;
         return (
             <Container style={{backgroundColor: "#5262af"}}>
@@ -119,8 +117,6 @@ export default class NewsScreen extends React.Component {
                                    paddingLeft: 10,
                                    paddingRight: 10,
                                }}
-                               value={searchText}
-                               onChangeText={(searchText) => this.setState({searchText})}
                                onSubmitEditing={(event) => this._searchSubmit(event)}
                         />
                         <Icon name="ios-search"/>

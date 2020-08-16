@@ -19,12 +19,14 @@ export default class SearchNewsScreen extends React.Component {
         super(props);
         this.state = {
             isLoading: false,
+            textSearch: "",
             news: [],
         };
     }
 
     componentDidMount() {
         const {textSearch} = this.props.route.params;
+        this.setState({textSearch})
         this.loadingSearchNews(textSearch);
     }
 
@@ -65,7 +67,7 @@ export default class SearchNewsScreen extends React.Component {
     };
 
     render() {
-        const {news, isLoading} = this.state;
+        const {news, isLoading, textSearch} = this.state;
         return (
             <Container>
                 <Header searchBar rounded>
@@ -83,7 +85,8 @@ export default class SearchNewsScreen extends React.Component {
                                    paddingLeft: 10,
                                    paddingRight: 10,
                                }}
-                               // onChangeText={(searchText) => this.setState({searchText})}
+                               value={textSearch}
+                               onChangeText={(textSearch) => this.setState({textSearch})}
                                onSubmitEditing={(event) => this._searchSubmit(event)}
                         />
                         <Icon name="ios-search"/>

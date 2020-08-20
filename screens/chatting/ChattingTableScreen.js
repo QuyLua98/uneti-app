@@ -20,7 +20,7 @@ import {
     Thumbnail
 } from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
-import {setUpChatBox, subscribe} from "../../store/chat/action";
+import {setUpChatBox} from "../../store/chat/action";
 import {socketsConnect} from "../../store/socket/action";
 import {connect} from 'react-redux';
 import {ENDPOINT_BROKER, JWT_TOKEN} from '../../constants/Constants';
@@ -31,7 +31,7 @@ import axios from "axios";
 import {Config} from "../../config";
 import {_removeAsyncStorageData} from "../../components/AsyncStorageUtils";
 import {getURIAvatarFromUserId} from "./components/Utils";
-import {subscribeUsersStatus, toggle} from "../../store/user/action";
+import {toggle} from "../../store/user/action";
 import Loader from "./components/Loader";
 import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
 import {getUserProfile} from "../../store/auth/action";
@@ -48,7 +48,7 @@ class ChattingTableScreen extends Component {
     componentDidMount() {
         this.setState({isLoading: true})
         InteractionManager.runAfterInteractions(async () => {
-            const {token} = this.props.route.params;
+            const token = this.props.auth.token;
             if (token != undefined || token !== "") {
                 await this.props.getUserProfile(token);
                 if (!this.props.auth.signedIn) {
@@ -58,8 +58,6 @@ class ChattingTableScreen extends Component {
                 }
                 this.getConversation(token);
                 await this.props.socketsConnect(token);
-                this.props.subscribeUsersStatus();
-                this.props.subscribe(ENDPOINT_BROKER);
                 this.setState({isLoading: false})
             } else {
                 this.props.navigation.goBack(null);
@@ -217,7 +215,7 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const mapDispatchToProps = {subscribe, socketsConnect, subscribeUsersStatus, toggle, setUpChatBox, getUserProfile};
+const mapDispatchToProps = {socketsConnect, toggle, setUpChatBox, getUserProfile};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
 
 const styles = StyleSheet.create({

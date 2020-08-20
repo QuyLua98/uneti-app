@@ -79,12 +79,10 @@ const DrawerContentComponent = ({navigation, self}) => {
                                     }else {
                                         const token = await _retrieveAsyncStorageData(JWT_TOKEN);
                                         const isValid = await isValidToken(token);
-                                        if(token !== null && isValid) {
+                                        if(token != null && isValid) {
+                                            self.setToken(token);
                                             navigation.navigate("ChattingLogin", {
-                                                screen: "ChattingContent",
-                                                params: {
-                                                    token: token,
-                                                },
+                                                screen: "ChattingContent"
                                             });
                                         }else {
                                             navigation.navigate("ChattingLogin");

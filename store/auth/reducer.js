@@ -11,6 +11,15 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
     switch (action.type) {
+        case types.FETCH_TOKEN:
+            return {
+                signedIn: state.signedIn,
+                username: state.username,
+                userId: state.userId,
+                token: action.token,
+                error: state.error,
+                authFailure: state.authFailure
+            }
         case types.AUTHENTICATED:
             return {
                 signedIn: true,

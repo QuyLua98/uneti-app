@@ -13,7 +13,6 @@ import {Utf8ArrayToJson} from "../../utils/StringUtils";
 
 
 let stompClient = null;
-let subscription = null;
 
 export const wsMiddleware = store => next => action => {
 
@@ -25,12 +24,7 @@ export const wsMiddleware = store => next => action => {
     };
 
     const toggleUser = data => {
-        console.log("============================")
-        console.log(data)
-        console.log("============================")
         data = Utf8ArrayToJson(data._binaryBody);
-        console.log(data)
-        console.log("============================")
         store.dispatch(userAction.toggle(data));
     }
 
@@ -53,11 +47,12 @@ export const wsMiddleware = store => next => action => {
                 onConnect: () => {
                     store.dispatch(socketAction.socketsConnected());
                     stompClient.subscribe(ENDPOINT_BROKER, onSubscribeMessage);
+                    stompClient.subscribe(ENDPOINT_USER_STATUS_BROKER, toggleUser);
                 },
                 debug: (str) => {
                     console.log(new Date(), str);
                 },
-                reconnectDelay: 15000
+                reconnectDelay: 30000
             });
             stompClient.activate();
             break;
@@ -73,22 +68,6 @@ export const wsMiddleware = store => next => action => {
                 destination: action.payload.api,
                 body: JSON.stringify(action.payload.data)
             });
-            break;
-        case chattingTypes.MESSAGE_SUBSCRIBE:
-            if (stompClient) {
-                subscription = stompClient.subscribe(
-                    action.payload.subscribe,
-                    onSubscribeMessage
-                );
-            }
-            break;
-        case userTypes.USER_STATUS_SUBSCRIBE:
-            if (stompClient) {
-                subscription = stompClient.subscribe(
-                    ENDPOINT_USER_STATUS_BROKER,
-                    toggleUser
-                )
-            }
             break;
         default:
             return next(action);

@@ -1,6 +1,4 @@
 import * as types from "./types";
-import MessageStatus from "../../screens/chatting/components/MessageStatus";
-import MessageType from "../../screens/chatting/components/MessageType";
 
 const defaultState = {
     users: [],

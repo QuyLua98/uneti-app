@@ -9,7 +9,7 @@ import MapScreen from "../screens/MapScreen";
 import DrawerContentComponent from "../components/DrawerContentComponent";
 import EgovNavigator from "./EgovNavigator";
 import ChattingNavigator from "./ChattingNavigator";
-import {getUserProfile} from "../store/auth/action";
+import {setToken} from "../store/auth/action";
 import {connect} from "react-redux";
 
 const Drawer = createDrawerNavigator();
@@ -48,5 +48,5 @@ class LeftDrawerNavigator extends React.Component {
 const mapStateToProps = state => ({
   auth: state.auth
 });
-const mapDispatchToProps = {getUserProfile};
+const mapDispatchToProps = {setToken};
 export default connect(mapStateToProps, mapDispatchToProps)(LeftDrawerNavigator);

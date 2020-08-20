@@ -22,7 +22,7 @@ class UserSlide extends Component {
                             return (
                                 <TouchableOpacity onPress={() => props.onClick(data.item.id, data.item.username)}
                                                   keyExtractor={data.item.id.toString()}>
-                                    <AvatarIcon userId={data.item.id} isActive={true}/>
+                                    <AvatarIcon userId={data.item.id} isActive={data.item.active}/>
                                 </TouchableOpacity>
                             )
                         }}

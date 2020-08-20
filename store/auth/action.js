@@ -4,9 +4,16 @@ import {
     _removeAsyncStorageData,
     _storeAsyncStorageData
 } from "../../components/AsyncStorageUtils";
-import {JWT_PREFIX, JWT_TOKEN} from "../../constants/Constants";
+import {JWT_TOKEN} from "../../constants/Constants";
 import {Config} from "../../config";
 import {Alert} from "react-native";
+
+export const setToken = (token) => {
+    return {
+        type: types.FETCH_TOKEN,
+        token: token
+    };
+};
 
 export const loggedIn = (data) => {
     return {

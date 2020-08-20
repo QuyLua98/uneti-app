@@ -6,9 +6,3 @@ export const toggle = (data) => {
         payload: data
     };
 };
-
-export const subscribeUsersStatus = () => {
-    return {
-        type: types.USER_STATUS_SUBSCRIBE
-    }
-}

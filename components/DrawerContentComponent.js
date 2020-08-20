@@ -80,9 +80,11 @@ const DrawerContentComponent = ({navigation, self}) => {
                                         const token = await _retrieveAsyncStorageData(JWT_TOKEN);
                                         const isValid = await isValidToken(token);
                                         if(token !== null && isValid) {
-                                            await self.getUserProfile(token);
                                             navigation.navigate("ChattingLogin", {
                                                 screen: "ChattingContent",
+                                                params: {
+                                                    token: token,
+                                                },
                                             });
                                         }else {
                                             navigation.navigate("ChattingLogin");

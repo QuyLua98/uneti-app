@@ -10,7 +10,6 @@ class UserSlide extends Component {
         super(props);
     }
 
-
     render() {
         const props = this.props;
         const users = this.props.user.users;
@@ -37,6 +36,7 @@ class UserSlide extends Component {
         )
     }
 }
+
 const styles = StyleSheet.create({
     container: {
         padding: 10

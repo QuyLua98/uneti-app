@@ -6,6 +6,5 @@ export const USERNAME = "USERNAME";
 export const PASSWORD = "PASSWORD";
 export const JWT_PREFIX = "Bearer";
 export const ENDPOINT_BROKER = "/user/queue/reply";
-export const ENDPOINT_USER_STATUS_BROKER = "/topic/user/status";
-export const ENDPOINT_TOGGLE_USER_STATUS = "/app/user.toggleStatus";
+export const ENDPOINT_USER_STATUS_BROKER = "/topic/user-status";
 export const ENDPOINT_SEND_MESSAGE = "/app/chat.sendMessage";

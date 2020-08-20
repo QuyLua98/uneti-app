@@ -6,7 +6,7 @@ export const isValidToken = async (token) => {
     let headers = {
         [JWT_TOKEN]: `Bearer ${token}`
     };
-    await axios
+    return await axios
         .get(`${Config.CHAT_DOMAIN}/api/isAuthenticated`, {headers})
         .then(res => {
             return res.data;

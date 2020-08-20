@@ -24,8 +24,13 @@ export const wsMiddleware = store => next => action => {
         store.dispatch(chattingAction.incomingMessage(message.conId, messages));
     };
 
-    const onUserActive = data => {
-        data = Utf8ArrayToJson(data);
+    const toggleUser = data => {
+        console.log("============================")
+        console.log(data)
+        console.log("============================")
+        data = Utf8ArrayToJson(data._binaryBody);
+        console.log(data)
+        console.log("============================")
         store.dispatch(userAction.toggle(data));
     }
 
@@ -81,7 +86,7 @@ export const wsMiddleware = store => next => action => {
             if (stompClient) {
                 subscription = stompClient.subscribe(
                     ENDPOINT_USER_STATUS_BROKER,
-                    onUserActive
+                    toggleUser
                 )
             }
             break;

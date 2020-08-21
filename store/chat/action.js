@@ -1,4 +1,6 @@
 import * as types from "./types";
+import {Conversation} from "../../components/entity/Conversation";
+import ChatRequest from "../../api/chat/ChatRequest";
 
 export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) => {
     return {
@@ -11,18 +13,27 @@ export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) =>
 };
 
 export const incomingMessage = (conId, incomingMessages) => (dispatch, getState) => {
-    const {conversations} = getState();
+    const state = getState();
+    const {conversations} = state.chat;
     let conversation = conversations.find(c => c.conId === conId);
     if (conversation != null) {
         conversation.messages = [...incomingMessages, ...conversation.messages];
+        return dispatch({
+            type: types.MESSAGE_INCOMING,
+            incomingMessages: incomingMessages,
+            conversations: conversations
+        })
     }else {
-        //TODO lỗi conversation undefined
+        console.log(ChatRequest)
+        const conversation = ChatRequest.get(`/conversation/${conId}`);
+        console.log(conversation)
+
+        return dispatch({
+            type: types.MESSAGE_INCOMING,
+            incomingMessages: incomingMessages,
+            conversations: [...conversation]
+        })
     }
-    return dispatch({
-        type: types.MESSAGE_INCOMING,
-        incomingMessages: incomingMessages,
-        conversations: conversations
-    })
 };
 
 export const sendMessage = (data, api) => {

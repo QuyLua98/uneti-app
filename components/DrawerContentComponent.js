@@ -2,7 +2,7 @@ import React from "react";
 import {Text, View, StyleSheet, Image, TouchableOpacity, SafeAreaView, StatusBar} from "react-native";
 import TabBarIcon from "./TabBarIcon";
 import {ScrollView} from "react-native-gesture-handler";
-import {_retrieveAsyncStorageData} from "./AsyncStorageUtils";
+import {_retrieveAsyncStorageData, _storeAsyncStorageData} from "./AsyncStorageUtils";
 import {JWT_TOKEN} from "../constants/Constants";
 import {isValidToken} from "../utils/TokenUtils";
 
@@ -78,6 +78,7 @@ const DrawerContentComponent = ({navigation, self}) => {
                                         });
                                     }else {
                                         const token = await _retrieveAsyncStorageData(JWT_TOKEN);
+                                        console.log(token)
                                         const isValid = await isValidToken(token);
                                         if(token != null && isValid) {
                                             self.setToken(token);

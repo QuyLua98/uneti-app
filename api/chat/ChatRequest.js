@@ -1,16 +1,16 @@
 import React from 'react';
 import axios from 'axios';
-import {Config as Configs} from "../config";
 import {connect} from 'react-redux';
 import * as RootNavigation from '../../navigation/LeftDrawerNavigator';
 import {logout} from "../../store/auth/action";
+import {Config} from "../../config"
 
 class ChatRequest extends React.Component {
     constructor(props) {
         super(props);
         const timeout = 1000 * 60 * 5;
         const request = axios.create({
-            baseURL: Configs.CHAT_DOMAIN,
+            baseURL: Config.CHAT_DOMAIN,
             timeout: timeout,
         })
 
@@ -37,6 +37,8 @@ class ChatRequest extends React.Component {
         }, function (error) {
             return Promise.reject(error);
         });
+
+        return request;
     };
 }
 
@@ -44,4 +46,4 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 const mapDispatchToProps = {logout};
-export default connect(mapStateToProps, mapDispatchToProps)(ChatRequest);
+export default connect(mapStateToProps, mapDispatchToProps)(new ChatRequest());

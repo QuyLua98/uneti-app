@@ -15,36 +15,35 @@ export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) =>
     };
 };
 
-export const incomingMessage = (conId, incomingMessages) => (dispatch, getState) => {
+export const initConversation = (conId, incomingMessages) => (dispatch, getState) => {
+    const state = getState();
+    const {token} = state.auth;
+    const headers = {
+        [JWT_TOKEN]: `Bearer ${token}`,
+    };
+
+    axios
+        .get(`${Config.CHAT_DOMAIN}/api/conversation/${conId}`, {headers})
+        .then((res) => {
+            let conversation = res.data;
+            conversation.messages = [...incomingMessages];
+            return dispatch({
+                type: types.MESSAGE_INCOMING,
+                incomingMessages: incomingMessages,
+                conversations: [conversation]
+            })
+        });
+}
+
+export const incomingMessage = (conversation, incomingMessages) => (dispatch, getState) => {
     const state = getState();
     const {conversations} = state.chat;
-    let conversation = conversations.find(c => c.conId === conId);
-    if (conversation != null) {
-        conversation.messages = [...incomingMessages, ...conversation.messages];
-        return dispatch({
-            type: types.MESSAGE_INCOMING,
-            incomingMessages: incomingMessages,
-            conversations: conversations
-        })
-    }else {
-        const {token} = state.auth;
-        const headers = {
-            [JWT_TOKEN]: `Bearer ${token}`,
-        };
-
-        axios
-            .get(`${Config.CHAT_DOMAIN}/api/conversation/${conId}`, {headers})
-            .then((res) => {
-                conversation = res.data;
-                console.log(res.data)
-            });
-
-        return dispatch({
-            type: types.MESSAGE_INCOMING,
-            incomingMessages: incomingMessages,
-            conversations: [conversation]
-        })
-    }
+    conversation.messages = [...incomingMessages, ...conversation.messages];
+    return dispatch({
+        type: types.MESSAGE_INCOMING,
+        incomingMessages: incomingMessages,
+        conversations: conversations
+    })
 };
 
 export const sendMessage = (data, api) => {

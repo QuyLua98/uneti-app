@@ -24,11 +24,12 @@ import {
     Text
 } from 'native-base';
 import {GiftedChat, Actions, Send} from 'react-native-gifted-chat';
-import {incomingMessage, sendMessage} from "../../store/chat/action";
+import {incomingMessage, initConversation, sendMessage} from "../../store/chat/action";
 import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
 import Colors from "../../constants/Colors";
 import {entityToMessage, messageToEntity} from "../../components/module/chatting/ConvertMessage";
 import {getURIAvatarFromUserId} from "./components/Utils";
+import * as chattingAction from "../../store/chat/action";
 
 class ChattingBoxScreen extends Component {
     constructor(props) {
@@ -51,35 +52,15 @@ class ChattingBoxScreen extends Component {
      createdDate: message.createdAt
      */
     onSend = (messages) => {
-        const {userIdReceive, usernameReceive, conId} = this.props.chat;
-        this.props.incomingMessage(conId, messages);
+        const {userIdReceive, usernameReceive, conId, conversations} = this.props.chat;
+        let conversation = conversations.find(c => c.conId === message.conId);
+        if (conversation != null) {
+            this.props.incomingMessage(conversation, messages);
+        } else {
+            this.props.initConversation(conId, messages);
+        }
         const messageEntity = messageToEntity(messages[0], userIdReceive, usernameReceive, conId);
         this.props.sendMessage(messageEntity, ENDPOINT_SEND_MESSAGE);
-    }
-
-    /**
-     _id: entity.userSentId,
-     text: entity.content,
-     createdAt: moment(entity.createdDate),
-     user: {
-            _id: entity.userSentId,
-            avatar: getURIAvatarFromUserId(entity.conId),
-        },
-     */
-    onReceive = (message) => {
-        this.setState((previousState) => {
-            return {
-                messages: GiftedChat.append(previousState.messages, {
-                    _id: message._id,
-                    text: message.text,
-                    createdAt: message.createdAt,
-                    user: {
-                        _id: message.user._id,
-                        avatar: message.user.avatar,
-                    },
-                }),
-            };
-        });
     }
 
     render() {
@@ -144,7 +125,7 @@ const mapStateToProps = state => ({
     chat: state.chat,
     auth: state.auth
 });
-const mapDispatchToProps = {sendMessage, incomingMessage};
+const mapDispatchToProps = {sendMessage, incomingMessage, initConversation};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingBoxScreen);
 
 const styles = StyleSheet.create({})

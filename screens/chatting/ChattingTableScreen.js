@@ -66,6 +66,7 @@ class ChattingTableScreen extends Component {
     }
 
     getConversation(token) {
+        //TODO Redux
         const headers = {
             [JWT_TOKEN]: `Bearer ${token}`,
         };

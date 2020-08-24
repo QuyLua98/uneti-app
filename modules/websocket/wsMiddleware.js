@@ -2,7 +2,6 @@ import * as chattingAction from "../../store/chat/action";
 import * as socketAction from "../../store/socket/action";
 import * as userAction from "../../store/user/action";
 import * as chattingTypes from "../../store/chat/types";
-import * as userTypes from "../../store/user/types";
 import * as socketTypes from "../../store/socket/types";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
@@ -17,10 +16,17 @@ let stompClient = null;
 export const wsMiddleware = store => next => action => {
 
     const onSubscribeMessage = message => {
+        const state = store.getState();
+        const {conversations} = state.chat;
         const messages = [];
         message = Utf8ArrayToJson(message._binaryBody);
         messages.push(entityToMessage(message));
-        store.dispatch(chattingAction.incomingMessage(message.conId, messages));
+        let conversation = conversations.find(c => c.conId === message.conId);
+        if (conversation != null) {
+            store.dispatch(chattingAction.incomingMessage(conversation, messages));
+        } else {
+            store.dispatch(chattingAction.initConversation(message.conId, messages));
+        }
     };
 
     const toggleUser = data => {

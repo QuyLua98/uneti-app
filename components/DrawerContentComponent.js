@@ -78,7 +78,6 @@ const DrawerContentComponent = ({navigation, self}) => {
                                         });
                                     }else {
                                         const token = await _retrieveAsyncStorageData(JWT_TOKEN);
-                                        console.log(token)
                                         const isValid = await isValidToken(token);
                                         if(token != null && isValid) {
                                             self.setToken(token);

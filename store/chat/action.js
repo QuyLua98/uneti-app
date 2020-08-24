@@ -1,6 +1,9 @@
 import * as types from "./types";
 import {Conversation} from "../../components/entity/Conversation";
 import ChatRequest from "../../api/chat/ChatRequest";
+import {JWT_TOKEN} from "../../constants/Constants";
+import axios from "axios";
+import {Config} from "../../config";
 
 export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) => {
     return {
@@ -24,14 +27,22 @@ export const incomingMessage = (conId, incomingMessages) => (dispatch, getState)
             conversations: conversations
         })
     }else {
-        console.log(ChatRequest)
-        const conversation = ChatRequest.get(`/conversation/${conId}`);
-        console.log(conversation)
+        const {token} = state.auth;
+        const headers = {
+            [JWT_TOKEN]: `Bearer ${token}`,
+        };
+
+        axios
+            .get(`${Config.CHAT_DOMAIN}/api/conversation/${conId}`, {headers})
+            .then((res) => {
+                conversation = res.data;
+                console.log(res.data)
+            });
 
         return dispatch({
             type: types.MESSAGE_INCOMING,
             incomingMessages: incomingMessages,
-            conversations: [...conversation]
+            conversations: [conversation]
         })
     }
 };

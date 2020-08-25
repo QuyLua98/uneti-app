@@ -1,11 +1,22 @@
 import * as types from "./types";
-import {Conversation} from "../../components/entity/Conversation";
-import ChatRequest from "../../api/chat/ChatRequest";
+import {Alert} from "react-native";
 import {JWT_TOKEN} from "../../constants/Constants";
 import axios from "axios";
 import {Config} from "../../config";
+import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
+
+const parseAllMessageEntityToMessage = (conversations) => {
+    if(conversations != null) {
+        conversations.forEach(c => {
+            c.messages = c.messages.map(m => entityToMessage(m));
+        });
+        return conversations;
+    }
+    return null;
+}
 
 export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) => {
+    console.log("Setting chat box.....")
     return {
         type: types.SETUP_CHAT_BOX,
         conId: conId,
@@ -13,6 +24,29 @@ export const setUpChatBox = (conId, messages, userIdReceive, usernameReceive) =>
         userIdReceive: userIdReceive,
         usernameReceive: usernameReceive,
     };
+};
+
+export const setUpConversations = () => async (dispatch, getState) => {
+    console.log("Setting conversations.....")
+    const state = getState();
+    const {token} = state.auth;
+    const headers = {
+        [JWT_TOKEN]: `Bearer ${token}`,
+    };
+    axios
+        .get(Config.CHAT_DOMAIN + `/api/user/conversation`, {headers})
+        .then((res) => {
+            let conversations = res.data;
+            conversations = parseAllMessageEntityToMessage(conversations);
+            return dispatch({
+                type: types.SETUP_CONVERSATIONS,
+                conversations: conversations
+            });
+        })
+        .catch((err) => {
+            console.log("Fail to get conversation: " + err)
+            Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
+        });
 };
 
 export const initConversation = (conId, incomingMessages) => (dispatch, getState) => {
@@ -27,22 +61,24 @@ export const initConversation = (conId, incomingMessages) => (dispatch, getState
         .then((res) => {
             let conversation = res.data;
             conversation.messages = [...incomingMessages];
+            console.log(conversation)
+            //TODO init con
+            // api get slow
+            // error message when init
             return dispatch({
-                type: types.MESSAGE_INCOMING,
+                type: types.INIT_CONVERSATION,
                 incomingMessages: incomingMessages,
-                conversations: [conversation]
+                conversation: conversation,
+                conId: conId
             })
         });
 }
 
-export const incomingMessage = (conversation, incomingMessages) => (dispatch, getState) => {
-    const state = getState();
-    const {conversations} = state.chat;
+export const incomingMessage = (conversation, incomingMessages) => (dispatch) => {
     conversation.messages = [...incomingMessages, ...conversation.messages];
     return dispatch({
         type: types.MESSAGE_INCOMING,
         incomingMessages: incomingMessages,
-        conversations: conversations
     })
 };
 

@@ -20,10 +20,14 @@ class ChatItemBox extends Component {
         if(lastMessage === null || lastMessage === undefined) {
             return <></>
         }
-        let user;
+        let user, active;
         switch (type) {
             case ConversationType.PRIVATE:
-                user = users.find(u => u.id !== currentUserId)
+                user = users.find(u => (u.id !== currentUserId));
+                const activeUser = this.props.user.users.find(u => (u.id === user.id));
+                if(activeUser != null) {
+                    active = activeUser.active;
+                }
                 break;
             case ConversationType.GROUP:
                 break;
@@ -31,17 +35,18 @@ class ChatItemBox extends Component {
                 return <></>
         }
 
+
         return (
             <ListItem avatar button={true}
                       onPress={() => {
                           this.props.onClick(user.id, user.username, conId, messages)
                       }}>
                 <Left>
-                    <AvatarIcon userId={user.id} isActive={true} />
+                    <AvatarIcon userId={user.id} isActive={active} />
                 </Left>
                 <Body style={{borderColor: Colors.white}}>
                     <Text style={{fontWeight: 'bold', fontSize: 17}}>{user.fullName}</Text>
-                    <Text note>{lastMessage.userSentId === user.id ? lastMessage.content : "Bạn: " + lastMessage.content}</Text>
+                    <Text note>{lastMessage.user._id === user.id ? lastMessage.text : "Bạn: " + lastMessage.text}</Text>
                 </Body>
                 <Right style={{borderColor: Colors.white, marginTop: 10}}>
                     <Text note>3:43 pm</Text>
@@ -52,6 +57,7 @@ class ChatItemBox extends Component {
 }
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    user: state.user
 });
 export default connect(mapStateToProps)(ChatItemBox);

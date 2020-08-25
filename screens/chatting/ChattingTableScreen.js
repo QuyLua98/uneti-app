@@ -20,10 +20,10 @@ import {
     Thumbnail
 } from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
-import {setUpChatBox} from "../../store/chat/action";
+import {setUpChatBox, setUpConversations} from "../../store/chat/action";
 import {socketsConnect} from "../../store/socket/action";
 import {connect} from 'react-redux';
-import {ENDPOINT_BROKER, JWT_TOKEN} from '../../constants/Constants';
+import {JWT_TOKEN} from '../../constants/Constants';
 import SearchBar from "./components/SearchBar";
 import UserSlide from "./components/UserSlide";
 import ChatItemBox from "./components/ChatItemBox";
@@ -41,7 +41,6 @@ class ChattingTableScreen extends Component {
         super(props);
         this.state = {
             isLoading: false,
-            conversations: []
         }
     }
 
@@ -56,8 +55,8 @@ class ChattingTableScreen extends Component {
                     this.setState({isLoading: false})
                     this.props.navigation.goBack(null);
                 }
-                this.getConversation(token);
                 await this.props.socketsConnect(token);
+                await this.props.setUpConversations();
                 this.setState({isLoading: false})
             } else {
                 this.props.navigation.goBack(null);
@@ -65,26 +64,8 @@ class ChattingTableScreen extends Component {
         });
     }
 
-    getConversation(token) {
-        //TODO Redux
-        const headers = {
-            [JWT_TOKEN]: `Bearer ${token}`,
-        };
-        axios
-            .get(Config.CHAT_DOMAIN + `/api/user/conversation`, {headers})
-            .then((res) => {
-                this.setState({conversations: res.data});
-                this.setState({isLoading: false});
-            })
-            .catch((err) => {
-                console.log("Fail to get conversation: " + err)
-                Alert.alert("Lỗi", "Tải thông tin thất bại!Xin thử lại!");
-                this.setState({isLoading: false});
-            });
-    }
-
     checkIsExistConversationOfTwoUser = async (userId) => {
-        const {conversations} = this.state;
+        const {conversations} = this.props.chat;
         let isExist = false;
         for (let con of conversations) {
             if (conversations.hasOwnProperty(con)) {
@@ -131,12 +112,12 @@ class ChattingTableScreen extends Component {
     handleClickItemUserSlide = async (userId, username) => {
         const conId = await this.checkIsExistConversationOfTwoUser(userId);
         if (conId) {
-            const {conversations} = this.state;
-            if (conversations.length === 0) {
+            const {conversations} = this.props.chat;
+            const con = conversations.find(c => (c.id === conId));
+            if (conversations.length === 0 || con == null) {
                 this.props.setUpChatBox(conId, [], userId, username);
                 this.props.navigation.navigate("ChattingBox");
             } else {
-                const con = conversations.find(c => c.id = conId);
                 const messages = con.messages.map(m => entityToMessage(m)).sort((m1, m2) => m2.createdAt - m1.createdAt);
                 this.props.setUpChatBox(conId, messages, userId, username);
                 this.props.navigation.navigate("ChattingBox");
@@ -148,8 +129,9 @@ class ChattingTableScreen extends Component {
         }
     }
 
-    handleClick = (userIdReceive, usernameReceive, conId, messageEntities) => {
-        const messages = messageEntities.map(m => entityToMessage(m)).sort((m1, m2) => m2.createdAt - m1.createdAt);
+    handleClick = (userIdReceive, usernameReceive, conId, message) => {
+        // const messages = messageEntities.map(m => entityToMessage(m)).sort((m1, m2) => m2.createdAt - m1.createdAt);
+        const messages = message.sort((m1, m2) => m2.createdAt - m1.createdAt);
         this.props.setUpChatBox(conId, messages, userIdReceive, usernameReceive);
         this.props.navigation.navigate("ChattingBox");
     }
@@ -159,7 +141,8 @@ class ChattingTableScreen extends Component {
     }
 
     render() {
-        const {conversations, isLoading} = this.state;
+        const {isLoading} = this.state;
+        const {conversations} = this.props.chat;
         const uriAvatar = getURIAvatarFromUserId(this.props.auth.userId);
         return (
             <Container>
@@ -198,7 +181,7 @@ class ChattingTableScreen extends Component {
                                 type={data.item.type}
                                 users={data.item.userInCon}
                                 conId={data.item.id}
-                                keyExtractor={data.item.code.toString()}
+                                keyExtractor={data.item.id.toString()}
                                 onClick={this.handleClick}
                                 lastMessage={data.item.messages[0]}
                                 messages={data.item.messages}
@@ -216,7 +199,7 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const mapDispatchToProps = {socketsConnect, toggle, setUpChatBox, getUserProfile};
+const mapDispatchToProps = {socketsConnect, toggle, setUpChatBox, getUserProfile, setUpConversations};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
 
 const styles = StyleSheet.create({

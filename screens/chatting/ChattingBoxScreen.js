@@ -3,33 +3,25 @@ import React, {Component} from "react";
 import {connect} from 'react-redux';
 
 import {
-    SafeAreaView,
     StyleSheet,
-    FlatList,
     KeyboardAvoidingView
 } from "react-native";
 import {
     Container,
     Body,
-    Content,
     Button,
     Header,
     Icon,
     Left,
     Right,
-    List,
     Title,
-    ListItem,
-    Thumbnail,
-    Text
 } from 'native-base';
-import {GiftedChat, Actions, Send} from 'react-native-gifted-chat';
+import {GiftedChat, Send} from 'react-native-gifted-chat';
 import {incomingMessage, initConversation, sendMessage} from "../../store/chat/action";
 import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
 import Colors from "../../constants/Colors";
-import {entityToMessage, messageToEntity} from "../../components/module/chatting/ConvertMessage";
+import {messageToEntity} from "../../components/module/chatting/ConvertMessage";
 import {getURIAvatarFromUserId} from "./components/Utils";
-import * as chattingAction from "../../store/chat/action";
 
 class ChattingBoxScreen extends Component {
     constructor(props) {
@@ -53,7 +45,7 @@ class ChattingBoxScreen extends Component {
      */
     onSend = (messages) => {
         const {userIdReceive, usernameReceive, conId, conversations} = this.props.chat;
-        let conversation = conversations.find(c => c.conId === message.conId);
+        const conversation = conversations.find(c => (c.id === conId));
         if (conversation != null) {
             this.props.incomingMessage(conversation, messages);
         } else {

@@ -21,7 +21,7 @@ export const wsMiddleware = store => next => action => {
         const messages = [];
         message = Utf8ArrayToJson(message._binaryBody);
         messages.push(entityToMessage(message));
-        let conversation = conversations.find(c => c.conId === message.conId);
+        const conversation = conversations.find(c => (c.id === message.conId));
         if (conversation != null) {
             store.dispatch(chattingAction.incomingMessage(conversation, messages));
         } else {

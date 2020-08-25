@@ -13,18 +13,24 @@ class UserSlide extends Component {
     render() {
         const props = this.props;
         const users = this.props.user.users;
+        let currentUserId;
+        if (this.props.auth) {
+            currentUserId = this.props.auth.userId;
+        }
         return (
             <View>
                 {users === undefined || users.length !== 0 ? <FlatList
                         data={users}
                         horizontal={true}
                         renderItem={data => {
-                            return (
-                                <TouchableOpacity onPress={() => props.onClick(data.item.id, data.item.username)}
-                                                  keyExtractor={data.item.id.toString()}>
-                                    <AvatarIcon userId={data.item.id} isActive={data.item.active}/>
-                                </TouchableOpacity>
-                            )
+                            if (data.item.id !== currentUserId) {
+                                return (
+                                    <TouchableOpacity onPress={() => props.onClick(data.item.id, data.item.username)}
+                                                      keyExtractor={data.item.id.toString()}>
+                                        <AvatarIcon userId={data.item.id} isActive={data.item.active}/>
+                                    </TouchableOpacity>
+                                )
+                            }
                         }}
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item, index) => index.toString()}

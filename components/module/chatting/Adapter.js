@@ -16,6 +16,7 @@ export const messageToEntity = (message, userId, username, conId) => {
     }
 }
 
+/* userSentId */
 export const entityToMessage = (entity) => {
     return {
         _id: randomUUID(),
@@ -25,5 +26,19 @@ export const entityToMessage = (entity) => {
             _id: entity.userSentId,
             avatar: getURIAvatarFromUserId(entity.userSentId),
         },
+    }
+}
+
+export const entityToConversation = (entity) => {
+    return {
+        id: entity.id,
+        code: entity.code,
+        name: entity.name,
+        type: entity.type,
+        createdDate: entity.createdDate,
+        userCreatedId: entity.userCreatedId,
+        thumbnail: entity.thumbnail,
+        userInCon: entity.userInCon,
+        messages: [],
     }
 }

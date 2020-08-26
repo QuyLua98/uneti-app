@@ -3,7 +3,7 @@ import {Alert} from "react-native";
 import {JWT_TOKEN} from "../../constants/Constants";
 import axios from "axios";
 import {Config} from "../../config";
-import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
+import {entityToMessage} from "../../components/module/chatting/Adapter";
 
 const parseAllMessageEntityToMessage = (conversations) => {
     if(conversations != null) {
@@ -49,6 +49,13 @@ export const setUpConversations = () => async (dispatch, getState) => {
         });
 };
 
+export const setConversation = (conversation) => {
+    return {
+        type: types.ADD_CONVERSATION,
+        conversation: conversation
+    }
+}
+
 export const initConversation = (conId, incomingMessages) => (dispatch, getState) => {
     const state = getState();
     const {token} = state.auth;
@@ -61,10 +68,6 @@ export const initConversation = (conId, incomingMessages) => (dispatch, getState
         .then((res) => {
             let conversation = res.data;
             conversation.messages = [...incomingMessages];
-            console.log(conversation)
-            //TODO init con
-            // api get slow
-            // error message when init
             return dispatch({
                 type: types.INIT_CONVERSATION,
                 incomingMessages: incomingMessages,
@@ -75,6 +78,7 @@ export const initConversation = (conId, incomingMessages) => (dispatch, getState
 }
 
 export const incomingMessage = (conversation, incomingMessages) => (dispatch) => {
+    console.log(conversation)
     conversation.messages = [...incomingMessages, ...conversation.messages];
     return dispatch({
         type: types.MESSAGE_INCOMING,

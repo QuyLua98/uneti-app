@@ -20,7 +20,7 @@ import {
     Thumbnail
 } from 'native-base';
 import {DrawerActions} from "@react-navigation/native";
-import {setUpChatBox, setUpConversations} from "../../store/chat/action";
+import {setConversation, setUpChatBox, setUpConversations} from "../../store/chat/action";
 import {socketsConnect} from "../../store/socket/action";
 import {connect} from 'react-redux';
 import {JWT_TOKEN} from '../../constants/Constants';
@@ -33,7 +33,7 @@ import {_removeAsyncStorageData} from "../../components/AsyncStorageUtils";
 import {getURIAvatarFromUserId} from "./components/Utils";
 import {toggle} from "../../store/user/action";
 import Loader from "./components/Loader";
-import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
+import {entityToConversation, entityToMessage} from "../../components/module/chatting/Adapter";
 import {getUserProfile} from "../../store/auth/action";
 
 class ChattingTableScreen extends Component {
@@ -91,17 +91,17 @@ class ChattingTableScreen extends Component {
             });
     }
 
-    createConversation = (otherUserId) => {
+    createConversation = async (otherUserId) => {
         const {token} = this.props.auth;
         const headers = {
             [JWT_TOKEN]: `Bearer ${token}`,
             'Content-Type': 'application/json',
         };
 
-        axios
+        return await axios
             .post(`${Config.CHAT_DOMAIN}/api/conversation/private/`, `${otherUserId}`, {headers})
             .then((res) => {
-                return res.data;
+                return entityToConversation(res.data);
             })
             .catch(() => {
                 Alert.alert("Lỗi", "Có lỗi xảy ra.");
@@ -123,21 +123,17 @@ class ChattingTableScreen extends Component {
                 this.props.navigation.navigate("ChattingBox");
             }
         } else {
-            await this.createConversation(userId);
-            this.props.setUpChatBox(conId, [], userId, username);
+            const conversation = await this.createConversation(userId);
+            this.props.setUpChatBox(conversation.id, [], userId, username);
+            this.props.setConversation(conversation);
             this.props.navigation.navigate("ChattingBox");
         }
     }
 
     handleClick = (userIdReceive, usernameReceive, conId, message) => {
-        // const messages = messageEntities.map(m => entityToMessage(m)).sort((m1, m2) => m2.createdAt - m1.createdAt);
         const messages = message.sort((m1, m2) => m2.createdAt - m1.createdAt);
         this.props.setUpChatBox(conId, messages, userIdReceive, usernameReceive);
         this.props.navigation.navigate("ChattingBox");
-    }
-
-    test = () => {
-        this.props.toggle([]);
     }
 
     render() {
@@ -177,15 +173,17 @@ class ChattingTableScreen extends Component {
                     <FlatList
                         data={conversations}
                         renderItem={(data) => {
-                            return <ChatItemBox
-                                type={data.item.type}
-                                users={data.item.userInCon}
-                                conId={data.item.id}
-                                keyExtractor={data.item.id.toString()}
-                                onClick={this.handleClick}
-                                lastMessage={data.item.messages[0]}
-                                messages={data.item.messages}
-                            />
+                            if (data.item.messages.length > 0) {
+                                return <ChatItemBox
+                                    type={data.item.type}
+                                    users={data.item.userInCon}
+                                    conId={data.item.id}
+                                    keyExtractor={data.item.id.toString()}
+                                    onClick={this.handleClick}
+                                    lastMessage={data.item.messages[0]}
+                                    messages={data.item.messages}
+                                />
+                            }
                         }}
                     />
                 </View>
@@ -199,7 +197,7 @@ const mapStateToProps = state => ({
     auth: state.auth
 });
 
-const mapDispatchToProps = {socketsConnect, toggle, setUpChatBox, getUserProfile, setUpConversations};
+const mapDispatchToProps = {socketsConnect, toggle, setUpChatBox, getUserProfile, setUpConversations, setConversation};
 export default connect(mapStateToProps, mapDispatchToProps)(ChattingTableScreen);
 
 const styles = StyleSheet.create({

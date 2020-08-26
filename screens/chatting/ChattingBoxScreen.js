@@ -20,7 +20,7 @@ import {GiftedChat, Send} from 'react-native-gifted-chat';
 import {incomingMessage, initConversation, sendMessage} from "../../store/chat/action";
 import {ENDPOINT_SEND_MESSAGE} from "../../constants/Constants";
 import Colors from "../../constants/Colors";
-import {messageToEntity} from "../../components/module/chatting/ConvertMessage";
+import {messageToEntity} from "../../components/module/chatting/Adapter";
 import {getURIAvatarFromUserId} from "./components/Utils";
 
 class ChattingBoxScreen extends Component {
@@ -46,11 +46,7 @@ class ChattingBoxScreen extends Component {
     onSend = (messages) => {
         const {userIdReceive, usernameReceive, conId, conversations} = this.props.chat;
         const conversation = conversations.find(c => (c.id === conId));
-        if (conversation != null) {
-            this.props.incomingMessage(conversation, messages);
-        } else {
-            this.props.initConversation(conId, messages);
-        }
+        this.props.incomingMessage(conversation, messages);
         const messageEntity = messageToEntity(messages[0], userIdReceive, usernameReceive, conId);
         this.props.sendMessage(messageEntity, ENDPOINT_SEND_MESSAGE);
     }

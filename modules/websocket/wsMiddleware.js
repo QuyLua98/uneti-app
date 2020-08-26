@@ -7,7 +7,7 @@ import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import {ENDPOINT_BROKER, ENDPOINT_USER_STATUS_BROKER, JWT_TOKEN} from "../../constants/Constants";
 import {Config} from "../../config";
-import {entityToMessage} from "../../components/module/chatting/ConvertMessage";
+import {entityToMessage} from "../../components/module/chatting/Adapter";
 import {Utf8ArrayToJson} from "../../utils/StringUtils";
 
 

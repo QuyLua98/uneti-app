@@ -25,6 +25,7 @@
     "moment": "^2.24.0",
     "native-base": "2.13.8",
     "react": "~16.9.0",
+    "react-devtools": "^3.6.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-calendar-picker": "^6.0.6",
     "react-native-gesture-handler": "~1.5.0",

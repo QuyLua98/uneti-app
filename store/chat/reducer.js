@@ -28,7 +28,7 @@ export default (state = defaultState, action) => {
             }
         case types.MESSAGE_INCOMING:
             return {
-                conversations: action.conversations != null ? action.conversations : state.conversations,
+                conversations: state.conversations,
                 conId: state.conId,
                 messages: [...action.incomingMessages, ...state.messages],
                 userIdReceive: state.userIdReceive,
@@ -39,6 +39,14 @@ export default (state = defaultState, action) => {
                 conversations: action.conversation != null ? [...state.conversations, action.conversation] : state.conversations,
                 conId: action.conId,
                 messages: action.incomingMessages,
+                userIdReceive: state.userIdReceive,
+                usernameReceive: state.usernameReceive,
+            }
+        case types.ADD_CONVERSATION:
+            return {
+                conversations: action.conversation != null ? [...state.conversations, action.conversation] : state.conversations,
+                conId: state.conId,
+                messages: state.incomingMessages,
                 userIdReceive: state.userIdReceive,
                 usernameReceive: state.usernameReceive,
             }
